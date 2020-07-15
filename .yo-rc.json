@@ -1,0 +1,37 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.brighton.cls"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "microservice",
+    "baseName": "catalogueservice",
+    "packageName": "com.brighton.cls",
+    "packageFolder": "com/brighton/cls",
+    "serverPort": "4000",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "prodDatabaseType": "postgresql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MmU2ZmEzNWQwMzA2YzBiMGMzNzc0MjFkY2UzMDZhN2I1YTE4OTRkNzc2NjRiN2UzMWZmNWNhNTVhZmNjNzU2ZjA2N2ZmZWY3OWQxN2UwMWJjMmVkMWZmZGVjODc5NjdkZWUzZDllNjRlN2I5MmNlYmEzZDdmMzczMmQ0ZTBkY2I=",
+    "embeddableLaunchScript": false,
+    "creationTimestamp": 1594797144731,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "blueprints": [],
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
