@@ -20,6 +20,8 @@ logging:
     com.brighton.cls: DEBUG
 
 spring:
+  application:
+        name: catalogueservice
   profiles:
     active: dev
     include:
@@ -37,9 +39,9 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/catalogueservice
-    username: catalogueservice
-    password:
+    url: jdbc:postgresql://localhost:5432/brighton
+    username: postgres
+    password: postgres
     hikari:
       poolName: Hikari
       auto-commit: false
@@ -78,6 +80,8 @@ server:
 # ===================================================================
 
 jhipster:
+  clientApp:
+        name: catalogueservice
   # CORS is disabled by default on microservices, as you should access them through a gateway.
   # If you want to enable it, please uncomment the configuration below.
   # cors:

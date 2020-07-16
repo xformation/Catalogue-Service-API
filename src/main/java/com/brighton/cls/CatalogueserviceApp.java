@@ -12,6 +12,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
@@ -26,6 +27,8 @@ public class CatalogueserviceApp {
 
     private static final Logger log = LoggerFactory.getLogger(CatalogueserviceApp.class);
 
+    private static ConfigurableApplicationContext ctx = null;
+    
     private final Environment env;
 
     public CatalogueserviceApp(Environment env) {
@@ -60,7 +63,10 @@ public class CatalogueserviceApp {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(CatalogueserviceApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
-        Environment env = app.run(args).getEnvironment();
+        ctx  = app.run(args);
+        Environment env = ctx.getEnvironment();
+        
+//        Environment env = app.run(args).getEnvironment();
         logApplicationStartup(env);
     }
 
@@ -95,4 +101,8 @@ public class CatalogueserviceApp {
             contextPath,
             env.getActiveProfiles());
     }
+    
+    public static <T> T getBean(Class<T> cls) {
+		return ctx.getBean(cls);
+	}
 }

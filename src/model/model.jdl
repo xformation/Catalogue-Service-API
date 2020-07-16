@@ -1,0 +1,27 @@
+
+entity Collector {
+    name String 
+    type String
+    datasource String
+}
+
+entity Dashboard {
+	dashboard Blob
+	documentation String maxlength(5000)
+}
+
+entity Library{
+	
+}
+
+entity LibraryFolder {
+	folder String
+}
+
+relationship ManyToOne {
+	Dashboard{collector} to Collector,
+	Library{collector} to Collector,
+	Library{libraryFolder} to LibraryFolder
+}
+
+dto * with mapstruct service all with serviceImpl
