@@ -2,6 +2,7 @@ package com.brighton.cls.domain;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -27,6 +28,10 @@ public class Collector implements Serializable {
 
     @Column(name = "datasource")
     private String datasource;
+
+    @Size(max = 5000)
+    @Column(name = "description", length = 5000)
+    private String description;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -75,6 +80,19 @@ public class Collector implements Serializable {
     public void setDatasource(String datasource) {
         this.datasource = datasource;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Collector description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -101,6 +119,7 @@ public class Collector implements Serializable {
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
             ", datasource='" + getDatasource() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

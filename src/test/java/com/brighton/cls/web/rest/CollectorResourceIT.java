@@ -41,6 +41,9 @@ public class CollectorResourceIT {
     private static final String DEFAULT_DATASOURCE = "AAAAAAAAAA";
     private static final String UPDATED_DATASOURCE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     @Autowired
     private CollectorRepository collectorRepository;
 
@@ -68,7 +71,8 @@ public class CollectorResourceIT {
         Collector collector = new Collector()
             .name(DEFAULT_NAME)
             .type(DEFAULT_TYPE)
-            .datasource(DEFAULT_DATASOURCE);
+            .datasource(DEFAULT_DATASOURCE)
+            .description(DEFAULT_DESCRIPTION);
         return collector;
     }
     /**
@@ -81,7 +85,8 @@ public class CollectorResourceIT {
         Collector collector = new Collector()
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
-            .datasource(UPDATED_DATASOURCE);
+            .datasource(UPDATED_DATASOURCE)
+            .description(UPDATED_DESCRIPTION);
         return collector;
     }
 
@@ -108,6 +113,7 @@ public class CollectorResourceIT {
         assertThat(testCollector.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCollector.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(DEFAULT_DATASOURCE);
+        assertThat(testCollector.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -144,7 +150,8 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(collector.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
-            .andExpect(jsonPath("$.[*].datasource").value(hasItem(DEFAULT_DATASOURCE)));
+            .andExpect(jsonPath("$.[*].datasource").value(hasItem(DEFAULT_DATASOURCE)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
     
     @Test
@@ -160,7 +167,8 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.id").value(collector.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
-            .andExpect(jsonPath("$.datasource").value(DEFAULT_DATASOURCE));
+            .andExpect(jsonPath("$.datasource").value(DEFAULT_DATASOURCE))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
     @Test
     @Transactional
@@ -185,7 +193,8 @@ public class CollectorResourceIT {
         updatedCollector
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
-            .datasource(UPDATED_DATASOURCE);
+            .datasource(UPDATED_DATASOURCE)
+            .description(UPDATED_DESCRIPTION);
         CollectorDTO collectorDTO = collectorMapper.toDto(updatedCollector);
 
         restCollectorMockMvc.perform(put("/api/collectors")
@@ -200,6 +209,7 @@ public class CollectorResourceIT {
         assertThat(testCollector.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCollector.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(UPDATED_DATASOURCE);
+        assertThat(testCollector.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

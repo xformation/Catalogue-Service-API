@@ -1,5 +1,6 @@
 package com.brighton.cls.service.dto;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,9 @@ public class CollectorDTO implements Serializable {
     private String type;
 
     private String datasource;
+
+    @Size(max = 5000)
+    private String description;
 
     
     public Long getId() {
@@ -48,6 +52,14 @@ public class CollectorDTO implements Serializable {
         this.datasource = datasource;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,6 +85,7 @@ public class CollectorDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
             ", datasource='" + getDatasource() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

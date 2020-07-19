@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,8 +45,8 @@ public class CollectorResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new collectorDTO, or with status {@code 400 (Bad Request)} if the collector has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/cls-collectors")
-    public ResponseEntity<CollectorDTO> createCollector(@RequestBody CollectorDTO collectorDTO) throws URISyntaxException {
+    @PostMapping("/collectors")
+    public ResponseEntity<CollectorDTO> createCollector(@Valid @RequestBody CollectorDTO collectorDTO) throws URISyntaxException {
         log.debug("REST request to save Collector : {}", collectorDTO);
         if (collectorDTO.getId() != null) {
             throw new BadRequestAlertException("A new collector cannot already have an ID", ENTITY_NAME, "idexists");
@@ -65,8 +66,8 @@ public class CollectorResource {
      * or with status {@code 500 (Internal Server Error)} if the collectorDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/cls-collectors")
-    public ResponseEntity<CollectorDTO> updateCollector(@RequestBody CollectorDTO collectorDTO) throws URISyntaxException {
+    @PutMapping("/collectors")
+    public ResponseEntity<CollectorDTO> updateCollector(@Valid @RequestBody CollectorDTO collectorDTO) throws URISyntaxException {
         log.debug("REST request to update Collector : {}", collectorDTO);
         if (collectorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -82,7 +83,7 @@ public class CollectorResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of collectors in body.
      */
-    @GetMapping("/cls-collectors")
+    @GetMapping("/collectors")
     public List<CollectorDTO> getAllCollectors() {
         log.debug("REST request to get all Collectors");
         return collectorService.findAll();
@@ -94,7 +95,7 @@ public class CollectorResource {
      * @param id the id of the collectorDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the collectorDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/cls-collectors/{id}")
+    @GetMapping("/collectors/{id}")
     public ResponseEntity<CollectorDTO> getCollector(@PathVariable Long id) {
         log.debug("REST request to get Collector : {}", id);
         Optional<CollectorDTO> collectorDTO = collectorService.findOne(id);
@@ -107,7 +108,7 @@ public class CollectorResource {
      * @param id the id of the collectorDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/cls-collectors/{id}")
+    @DeleteMapping("/collectors/{id}")
     public ResponseEntity<Void> deleteCollector(@PathVariable Long id) {
         log.debug("REST request to delete Collector : {}", id);
         collectorService.delete(id);

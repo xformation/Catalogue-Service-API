@@ -2,7 +2,10 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.domain.Catalog;
+import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
 import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.domain.Library;
@@ -63,14 +68,15 @@ public class CollectorController {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/addCollector")
-    public ResponseEntity<List<Collector>> addCollector(@RequestParam String name, @RequestParam String type) throws URISyntaxException {
+    public ResponseEntity<List<Catalog>> addCollector(@RequestParam String name, @RequestParam String type, @RequestParam(required = false) String description) throws URISyntaxException {
         logger.info(String.format("Request to create a Collector. Collector name : %s, type : %s", name, type));
     	Collector collector = new Collector();
         collector.setName(name);
         collector.setType(type);
+        collector.setDescription(description);
         
         collector = collectorRepository.save(collector);
-        List<Collector> list = getAllCollectors();
+        List<Catalog> list = getAllCollectors();
         return ResponseEntity.created(new URI("/api/addCollector/" + collector.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, collector.getId().toString()))
             .body(list);
@@ -135,10 +141,38 @@ public class CollectorController {
      * @return the {@link List<Collector>} with status {@code 200 (OK)} and the list of collectors in body.
      */
     @GetMapping("/listCollector")
-    public List<Collector> getAllCollectors() {
-        logger.debug("Request to get all Collectors");
-        return collectorRepository.findAll(Sort.by(Direction.DESC, "id"));
+    public List<Catalog> getAllCollectors() {
+        logger.info("Request to get all Collectors");
+        List<Collector> listCollector = collectorRepository.findAll();
+        List<Catalog> catalogList = new ArrayList<>();
+        for(Collector collector: listCollector) {
+        	Catalog catalog = createCatalog(collector);
+        	catalogList.add(catalog);
+        }
+        logger.info("Request to get all Collectors completed. Response returned");
+        return catalogList;
     }
+
+	private Catalog createCatalog(Collector collector) {
+		Catalog catalog = new Catalog();
+		catalog.setCatalogName(collector.getName());
+		catalog.setType(collector.getType());
+		catalog.setCatalogDescription(collector.getDescription());
+		
+		Dashboard dashboard = new Dashboard();
+		dashboard.setCollector(collector);
+		List<Dashboard> dashboardList = dashboardRepository.findAll(Example.of(dashboard));
+		List<CatalogDetail> catalogDetailList = new ArrayList<>();
+		for(Dashboard db: dashboardList) {
+			CatalogDetail catalogDetail = new CatalogDetail();
+			catalogDetail.setTitle(db.getName());
+			catalogDetail.setDescription(db.getDescription());
+			catalogDetail.setDashboardJson(new String(db.getDashboard()));
+			catalogDetailList.add(catalogDetail);
+		}
+		catalog.setCatalogDetail(catalogDetailList);
+		return catalog;
+	}
 
     /**
      * {@code GET  /listCollector/:id} : get a collector for given id.
@@ -148,13 +182,52 @@ public class CollectorController {
      * @throws URISyntaxException 
      */
     @GetMapping("/getCollector/{id}")
-    public ResponseEntity<Collector> getCollector(@PathVariable Long id) throws URISyntaxException {
+    public ResponseEntity<Catalog> getCollector(@PathVariable Long id) throws URISyntaxException {
         logger.debug("Request to get a Collector. Collector id : ", id);
         Collector collector = collectorRepository.findById(id).get();
+        Catalog catalog = createCatalog(collector);
         return ResponseEntity.created(new URI("/api/listCollector/" + collector.getId()))
                 .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, collector.getId().toString()))
-                .body(collector);
+                .body(catalog);
     }
 
+    
+    /**
+     * {@code GET  /searchCollector} : get collectors based on filter criteria.
+     *
+     * @return the {@link List<Collector>} with status {@code 200 (OK)} and the list of collectors in body.
+     */
+    @GetMapping("/searchCollector")
+    public List<Collector> searchCollector(@RequestParam Map<String, String> criteriaMap) {
+        logger.debug("Request to get Collectors on given filter criteria");
+        Collector obj = new Collector();
+		boolean isFilter = false;
+		
+		if(criteriaMap.get("id") != null) {
+			obj.setId(Long.parseLong(criteriaMap.get("id")));
+    		isFilter = true;
+    	}
+		if(criteriaMap.get("name") != null) {
+			obj.setName(criteriaMap.get("name"));
+    		isFilter = true;
+    	}
+		if(criteriaMap.get("type") != null) {
+			obj.setType(criteriaMap.get("type"));
+    		isFilter = true;
+    	}
+		if(criteriaMap.get("datasource") != null) {
+			obj.setDatasource(criteriaMap.get("datasource"));
+    		isFilter = true;
+    	}
+		
+		List<Collector> list = null;
+    	if(isFilter) {
+    		list = this.collectorRepository.findAll(Example.of(obj), Sort.by(Direction.DESC, "id"));
+    	}else {
+    		list = this.collectorRepository.findAll(Sort.by(Direction.DESC, "id"));
+    	}
+        
+    	return list;
+    }
     
 }

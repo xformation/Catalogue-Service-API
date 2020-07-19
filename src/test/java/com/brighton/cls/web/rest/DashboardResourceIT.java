@@ -33,13 +33,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class DashboardResourceIT {
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     private static final byte[] DEFAULT_DASHBOARD = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_DASHBOARD = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_DASHBOARD_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_DASHBOARD_CONTENT_TYPE = "image/png";
 
-    private static final String DEFAULT_DOCUMENTATION = "AAAAAAAAAA";
-    private static final String UPDATED_DOCUMENTATION = "BBBBBBBBBB";
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     @Autowired
     private DashboardRepository dashboardRepository;
@@ -66,9 +69,10 @@ public class DashboardResourceIT {
      */
     public static Dashboard createEntity(EntityManager em) {
         Dashboard dashboard = new Dashboard()
+            .name(DEFAULT_NAME)
             .dashboard(DEFAULT_DASHBOARD)
             .dashboardContentType(DEFAULT_DASHBOARD_CONTENT_TYPE)
-            .documentation(DEFAULT_DOCUMENTATION);
+            .description(DEFAULT_DESCRIPTION);
         return dashboard;
     }
     /**
@@ -79,9 +83,10 @@ public class DashboardResourceIT {
      */
     public static Dashboard createUpdatedEntity(EntityManager em) {
         Dashboard dashboard = new Dashboard()
+            .name(UPDATED_NAME)
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
-            .documentation(UPDATED_DOCUMENTATION);
+            .description(UPDATED_DESCRIPTION);
         return dashboard;
     }
 
@@ -105,9 +110,10 @@ public class DashboardResourceIT {
         List<Dashboard> dashboardList = dashboardRepository.findAll();
         assertThat(dashboardList).hasSize(databaseSizeBeforeCreate + 1);
         Dashboard testDashboard = dashboardList.get(dashboardList.size() - 1);
+        assertThat(testDashboard.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testDashboard.getDashboard()).isEqualTo(DEFAULT_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(DEFAULT_DASHBOARD_CONTENT_TYPE);
-        assertThat(testDashboard.getDocumentation()).isEqualTo(DEFAULT_DOCUMENTATION);
+        assertThat(testDashboard.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
     }
 
     @Test
@@ -142,9 +148,10 @@ public class DashboardResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(dashboard.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].dashboardContentType").value(hasItem(DEFAULT_DASHBOARD_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].dashboard").value(hasItem(Base64Utils.encodeToString(DEFAULT_DASHBOARD))))
-            .andExpect(jsonPath("$.[*].documentation").value(hasItem(DEFAULT_DOCUMENTATION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
     }
     
     @Test
@@ -158,9 +165,10 @@ public class DashboardResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(dashboard.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.dashboardContentType").value(DEFAULT_DASHBOARD_CONTENT_TYPE))
             .andExpect(jsonPath("$.dashboard").value(Base64Utils.encodeToString(DEFAULT_DASHBOARD)))
-            .andExpect(jsonPath("$.documentation").value(DEFAULT_DOCUMENTATION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
     }
     @Test
     @Transactional
@@ -183,9 +191,10 @@ public class DashboardResourceIT {
         // Disconnect from session so that the updates on updatedDashboard are not directly saved in db
         em.detach(updatedDashboard);
         updatedDashboard
+            .name(UPDATED_NAME)
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
-            .documentation(UPDATED_DOCUMENTATION);
+            .description(UPDATED_DESCRIPTION);
         DashboardDTO dashboardDTO = dashboardMapper.toDto(updatedDashboard);
 
         restDashboardMockMvc.perform(put("/api/dashboards")
@@ -197,9 +206,10 @@ public class DashboardResourceIT {
         List<Dashboard> dashboardList = dashboardRepository.findAll();
         assertThat(dashboardList).hasSize(databaseSizeBeforeUpdate);
         Dashboard testDashboard = dashboardList.get(dashboardList.size() - 1);
+        assertThat(testDashboard.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testDashboard.getDashboard()).isEqualTo(UPDATED_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(UPDATED_DASHBOARD_CONTENT_TYPE);
-        assertThat(testDashboard.getDocumentation()).isEqualTo(UPDATED_DOCUMENTATION);
+        assertThat(testDashboard.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
     }
 
     @Test

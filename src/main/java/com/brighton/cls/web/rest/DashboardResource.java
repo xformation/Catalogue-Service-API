@@ -45,7 +45,7 @@ public class DashboardResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new dashboardDTO, or with status {@code 400 (Bad Request)} if the dashboard has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PostMapping("/cls-dashboards")
+    @PostMapping("/dashboards")
     public ResponseEntity<DashboardDTO> createDashboard(@Valid @RequestBody DashboardDTO dashboardDTO) throws URISyntaxException {
         log.debug("REST request to save Dashboard : {}", dashboardDTO);
         if (dashboardDTO.getId() != null) {
@@ -66,7 +66,7 @@ public class DashboardResource {
      * or with status {@code 500 (Internal Server Error)} if the dashboardDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/cls-dashboards")
+    @PutMapping("/dashboards")
     public ResponseEntity<DashboardDTO> updateDashboard(@Valid @RequestBody DashboardDTO dashboardDTO) throws URISyntaxException {
         log.debug("REST request to update Dashboard : {}", dashboardDTO);
         if (dashboardDTO.getId() == null) {
@@ -83,7 +83,7 @@ public class DashboardResource {
      *
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of dashboards in body.
      */
-    @GetMapping("/cls-dashboards")
+    @GetMapping("/dashboards")
     public List<DashboardDTO> getAllDashboards() {
         log.debug("REST request to get all Dashboards");
         return dashboardService.findAll();
@@ -95,7 +95,7 @@ public class DashboardResource {
      * @param id the id of the dashboardDTO to retrieve.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the dashboardDTO, or with status {@code 404 (Not Found)}.
      */
-    @GetMapping("/cls-dashboards/{id}")
+    @GetMapping("/dashboards/{id}")
     public ResponseEntity<DashboardDTO> getDashboard(@PathVariable Long id) {
         log.debug("REST request to get Dashboard : {}", id);
         Optional<DashboardDTO> dashboardDTO = dashboardService.findOne(id);
@@ -108,7 +108,7 @@ public class DashboardResource {
      * @param id the id of the dashboardDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
-    @DeleteMapping("/cls-dashboards/{id}")
+    @DeleteMapping("/dashboards/{id}")
     public ResponseEntity<Void> deleteDashboard(@PathVariable Long id) {
         log.debug("REST request to delete Dashboard : {}", id);
         dashboardService.delete(id);

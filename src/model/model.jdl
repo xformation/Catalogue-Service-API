@@ -3,11 +3,13 @@ entity Collector {
     name String 
     type String
     datasource String
+    description String maxlength(5000)
 }
 
 entity Dashboard {
+	name String
 	dashboard Blob
-	documentation String maxlength(5000)
+	description String maxlength(5000)
 }
 
 entity Library{

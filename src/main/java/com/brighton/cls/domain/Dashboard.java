@@ -21,6 +21,9 @@ public class Dashboard implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Lob
     @Column(name = "dashboard")
     private byte[] dashboard;
@@ -29,8 +32,8 @@ public class Dashboard implements Serializable {
     private String dashboardContentType;
 
     @Size(max = 5000)
-    @Column(name = "documentation", length = 5000)
-    private String documentation;
+    @Column(name = "description", length = 5000)
+    private String description;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "dashboards", allowSetters = true)
@@ -43,6 +46,19 @@ public class Dashboard implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Dashboard name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public byte[] getDashboard() {
@@ -71,17 +87,17 @@ public class Dashboard implements Serializable {
         this.dashboardContentType = dashboardContentType;
     }
 
-    public String getDocumentation() {
-        return documentation;
+    public String getDescription() {
+        return description;
     }
 
-    public Dashboard documentation(String documentation) {
-        this.documentation = documentation;
+    public Dashboard description(String description) {
+        this.description = description;
         return this;
     }
 
-    public void setDocumentation(String documentation) {
-        this.documentation = documentation;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Collector getCollector() {
@@ -119,9 +135,10 @@ public class Dashboard implements Serializable {
     public String toString() {
         return "Dashboard{" +
             "id=" + getId() +
+            ", name='" + getName() + "'" +
             ", dashboard='" + getDashboard() + "'" +
             ", dashboardContentType='" + getDashboardContentType() + "'" +
-            ", documentation='" + getDocumentation() + "'" +
+            ", description='" + getDescription() + "'" +
             "}";
     }
 }

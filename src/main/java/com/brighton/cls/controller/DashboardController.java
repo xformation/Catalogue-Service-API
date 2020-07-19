@@ -62,7 +62,8 @@ public class DashboardController {
      */
     @PostMapping("/addDashboardToCollector")
     public ResponseEntity<Dashboard> addDashboardToCollector(
-    										@RequestParam Long collectorId, 
+    										@RequestParam Long collectorId,
+    										@RequestParam String dashboardName,
     										@RequestParam String dashboardJson, 
     										@RequestParam(required = false) String dashboardDoc) throws URISyntaxException {
         logger.info(String.format("Request to create add a dashboard to existing Collector. Collector id : %d", collectorId));
@@ -75,10 +76,10 @@ public class DashboardController {
         
         Dashboard dashboard = new Dashboard();
         dashboard.setCollector(oc.get());
+        dashboard.setName(dashboardName);
         dashboard.setDashboard(dashboardJson.getBytes());
-        if(!StringUtils.isBlank(dashboardDoc)) {
-        	dashboard.setDocumentation(dashboardDoc);
-        }
+        dashboard.setDescription(dashboardDoc);
+        
         
         dashboard = dashboardRepository.save(dashboard);
         logger.info("Dashboard added to collector successfull");

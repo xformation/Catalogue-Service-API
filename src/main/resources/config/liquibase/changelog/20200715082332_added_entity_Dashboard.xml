@@ -15,13 +15,16 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="dashboard" type="longblob">
                 <constraints nullable="true" />
             </column>
             <column name="dashboard_content_type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="documentation" type="varchar(5000)">
+            <column name="description" type="varchar(5000)">
                 <constraints nullable="true" />
             </column>
             <column name="collector_id" type="bigint">

@@ -11,12 +11,14 @@ public class DashboardDTO implements Serializable {
     
     private Long id;
 
+    private String name;
+
     @Lob
     private byte[] dashboard;
 
     private String dashboardContentType;
     @Size(max = 5000)
-    private String documentation;
+    private String description;
 
 
     private Long collectorId;
@@ -27,6 +29,14 @@ public class DashboardDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public byte[] getDashboard() {
@@ -45,12 +55,12 @@ public class DashboardDTO implements Serializable {
         this.dashboardContentType = dashboardContentType;
     }
 
-    public String getDocumentation() {
-        return documentation;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDocumentation(String documentation) {
-        this.documentation = documentation;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getCollectorId() {
@@ -83,8 +93,9 @@ public class DashboardDTO implements Serializable {
     public String toString() {
         return "DashboardDTO{" +
             "id=" + getId() +
+            ", name='" + getName() + "'" +
             ", dashboard='" + getDashboard() + "'" +
-            ", documentation='" + getDocumentation() + "'" +
+            ", description='" + getDescription() + "'" +
             ", collectorId=" + getCollectorId() +
             "}";
     }
