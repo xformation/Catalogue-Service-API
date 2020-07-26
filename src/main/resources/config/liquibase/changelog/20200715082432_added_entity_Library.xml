@@ -18,7 +18,7 @@
             <column name="collector_id" type="bigint">
                 <constraints nullable="true" />
             </column>
-            <column name="library_folder_id" type="bigint">
+            <column name="folder_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

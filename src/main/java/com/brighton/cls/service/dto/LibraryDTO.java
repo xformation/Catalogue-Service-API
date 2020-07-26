@@ -12,7 +12,7 @@ public class LibraryDTO implements Serializable {
 
     private Long collectorId;
 
-    private Long libraryFolderId;
+    private Long folderId;
     
     public Long getId() {
         return id;
@@ -30,12 +30,12 @@ public class LibraryDTO implements Serializable {
         this.collectorId = collectorId;
     }
 
-    public Long getLibraryFolderId() {
-        return libraryFolderId;
+    public Long getFolderId() {
+        return folderId;
     }
 
-    public void setLibraryFolderId(Long libraryFolderId) {
-        this.libraryFolderId = libraryFolderId;
+    public void setFolderId(Long folderId) {
+        this.folderId = folderId;
     }
 
     @Override
@@ -61,7 +61,7 @@ public class LibraryDTO implements Serializable {
         return "LibraryDTO{" +
             "id=" + getId() +
             ", collectorId=" + getCollectorId() +
-            ", libraryFolderId=" + getLibraryFolderId() +
+            ", folderId=" + getFolderId() +
             "}";
     }
 }

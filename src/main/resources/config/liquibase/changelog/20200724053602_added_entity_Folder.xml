@@ -8,19 +8,30 @@
 
     
     <!--
-        Added the entity LibraryFolder.
+        Added the entity Folder.
     -->
-    <changeSet id="20200715082532-1" author="jhipster">
-        <createTable tableName="library_folder">
+    <changeSet id="20200724053602-1" author="jhipster">
+        <createTable tableName="folder">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="folder" type="varchar(255)">
+            <column name="title" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="parent_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_opened" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_checked" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_folder" type="boolean">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
     </changeSet>
-
 
 </databaseChangeLog>

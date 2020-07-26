@@ -26,7 +26,7 @@ public class Library implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties(value = "libraries", allowSetters = true)
-    private LibraryFolder libraryFolder;
+    private Folder folder;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -50,17 +50,17 @@ public class Library implements Serializable {
         this.collector = collector;
     }
 
-    public LibraryFolder getLibraryFolder() {
-        return libraryFolder;
+    public Folder getFolder() {
+        return folder;
     }
 
-    public Library libraryFolder(LibraryFolder libraryFolder) {
-        this.libraryFolder = libraryFolder;
+    public Library folder(Folder folder) {
+        this.folder = folder;
         return this;
     }
 
-    public void setLibraryFolder(LibraryFolder libraryFolder) {
-        this.libraryFolder = libraryFolder;
+    public void setFolder(Folder folder) {
+        this.folder = folder;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

@@ -16,14 +16,18 @@ entity Library{
 	
 }
 
-entity LibraryFolder {
-	folder String
+entity Folder {
+	title String
+	parentId Long
+	isOpened Boolean
+	isChecked Boolean
+	isFolder Boolean
 }
 
 relationship ManyToOne {
 	Dashboard{collector} to Collector,
 	Library{collector} to Collector,
-	Library{libraryFolder} to LibraryFolder
+	Library{folder} to Folder
 }
 
 dto * with mapstruct service all with serviceImpl

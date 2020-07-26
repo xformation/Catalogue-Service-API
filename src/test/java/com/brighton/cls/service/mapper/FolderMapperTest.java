@@ -4,19 +4,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LibraryFolderMapperTest {
+public class FolderMapperTest {
 
-    private LibraryFolderMapper libraryFolderMapper;
+    private FolderMapper folderMapper;
 
 //    @BeforeEach
 //    public void setUp() {
-//        libraryFolderMapper = new LibraryFolderMapperImpl();
+//        folderMapper = new FolderMapperImpl();
 //    }
 //
 //    @Test
 //    public void testEntityFromId() {
 //        Long id = 1L;
-//        assertThat(libraryFolderMapper.fromId(id).getId()).isEqualTo(id);
-//        assertThat(libraryFolderMapper.fromId(null)).isNull();
+//        assertThat(folderMapper.fromId(id).getId()).isEqualTo(id);
+//        assertThat(folderMapper.fromId(null)).isNull();
 //    }
 }

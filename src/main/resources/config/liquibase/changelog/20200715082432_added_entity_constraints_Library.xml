@@ -14,11 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="collector"/>
 
-        <addForeignKeyConstraint baseColumnNames="library_folder_id"
+        <addForeignKeyConstraint baseColumnNames="folder_id"
                                  baseTableName="library"
-                                 constraintName="fk_library_library_folder_id"
+                                 constraintName="fk_library_folder_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="library_folder"/>
+                                 referencedTableName="folder"/>
 
     </changeSet>
 </databaseChangeLog>

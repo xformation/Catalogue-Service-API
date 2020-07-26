@@ -9,15 +9,15 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Library} and its DTO {@link LibraryDTO}.
  */
-@Mapper(componentModel = "spring", uses = {CollectorMapper.class, LibraryFolderMapper.class})
+@Mapper(componentModel = "spring", uses = {CollectorMapper.class, FolderMapper.class})
 public interface LibraryMapper extends EntityMapper<LibraryDTO, Library> {
 
     @Mapping(source = "collector.id", target = "collectorId")
-    @Mapping(source = "libraryFolder.id", target = "libraryFolderId")
+    @Mapping(source = "folder.id", target = "folderId")
     LibraryDTO toDto(Library library);
 
     @Mapping(source = "collectorId", target = "collector")
-    @Mapping(source = "libraryFolderId", target = "libraryFolder")
+    @Mapping(source = "folderId", target = "folder")
     Library toEntity(LibraryDTO libraryDTO);
 
     default Library fromId(Long id) {
