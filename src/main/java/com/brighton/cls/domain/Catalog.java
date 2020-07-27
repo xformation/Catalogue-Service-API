@@ -3,12 +3,19 @@ package com.brighton.cls.domain;
 import java.util.List;
 
 public class Catalog {
-	
+	private Long id;
 	private String catalogName;
 	private String type;
 	private String catalogDescription = "Add To library Preview Dashboard";
 	private String catalogImage;
 	private List<CatalogDetail> catalogDetail;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	
 	public String getCatalogName() {
 		return catalogName;

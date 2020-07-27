@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -45,7 +46,7 @@ public class LibraryResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/libraries")
-    public ResponseEntity<LibraryDTO> createLibrary(@RequestBody LibraryDTO libraryDTO) throws URISyntaxException {
+    public ResponseEntity<LibraryDTO> createLibrary(@Valid @RequestBody LibraryDTO libraryDTO) throws URISyntaxException {
         log.debug("REST request to save Library : {}", libraryDTO);
         if (libraryDTO.getId() != null) {
             throw new BadRequestAlertException("A new library cannot already have an ID", ENTITY_NAME, "idexists");
@@ -66,7 +67,7 @@ public class LibraryResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/libraries")
-    public ResponseEntity<LibraryDTO> updateLibrary(@RequestBody LibraryDTO libraryDTO) throws URISyntaxException {
+    public ResponseEntity<LibraryDTO> updateLibrary(@Valid @RequestBody LibraryDTO libraryDTO) throws URISyntaxException {
         log.debug("REST request to update Library : {}", libraryDTO);
         if (libraryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

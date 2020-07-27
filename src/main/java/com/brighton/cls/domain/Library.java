@@ -3,6 +3,7 @@ package com.brighton.cls.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -20,6 +21,16 @@ public class Library implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Column(name = "app_name")
+    private String appName;
+
+    @Size(max = 2000)
+    @Column(name = "virtual_path", length = 2000)
+    private String virtualPath;
+
+    @Column(name = "data_source")
+    private String dataSource;
+
     @ManyToOne
     @JsonIgnoreProperties(value = "libraries", allowSetters = true)
     private Collector collector;
@@ -35,6 +46,45 @@ public class Library implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public Library appName(String appName) {
+        this.appName = appName;
+        return this;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getVirtualPath() {
+        return virtualPath;
+    }
+
+    public Library virtualPath(String virtualPath) {
+        this.virtualPath = virtualPath;
+        return this;
+    }
+
+    public void setVirtualPath(String virtualPath) {
+        this.virtualPath = virtualPath;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public Library dataSource(String dataSource) {
+        this.dataSource = dataSource;
+        return this;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
     }
 
     public Collector getCollector() {
@@ -85,6 +135,9 @@ public class Library implements Serializable {
     public String toString() {
         return "Library{" +
             "id=" + getId() +
+            ", appName='" + getAppName() + "'" +
+            ", virtualPath='" + getVirtualPath() + "'" +
+            ", dataSource='" + getDataSource() + "'" +
             "}";
     }
 }

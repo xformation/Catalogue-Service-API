@@ -15,6 +15,15 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="app_name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="virtual_path" type="varchar(2000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="data_source" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="collector_id" type="bigint">
                 <constraints nullable="true" />
             </column>

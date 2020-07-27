@@ -13,7 +13,9 @@ entity Dashboard {
 }
 
 entity Library{
-	
+	appName String
+	virtualPath String maxlength(2000)
+	dataSource String
 }
 
 entity Folder {

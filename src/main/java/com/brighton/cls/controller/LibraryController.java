@@ -2,6 +2,7 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,8 @@ import com.brighton.cls.domain.Library;
 import com.brighton.cls.repository.CollectorRepository;
 import com.brighton.cls.repository.FolderRepository;
 import com.brighton.cls.repository.LibraryRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.github.jhipster.web.util.HeaderUtil;
 
@@ -58,26 +63,34 @@ public class LibraryController {
      * @param collectorId: collector's id.
      * @param folderId: folder's id.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the new library,
-     * or with status {@code 400 (Bad Request)} if the collectorId/folderId is null,
-     * or with status {@code 500 (Internal Server Error)} if the library couldn't be added.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     * or with status {@code 417 Exception_Failed} if the collectorId/folderId is null,
      */
     @PostMapping("/addCollectorToLibrary")
-    public ResponseEntity<Library> addCollectorToLibrary(@RequestParam Long collectorId, @RequestParam Long folderId) throws URISyntaxException {
-        logger.info(String.format("Request to add a Collector to library. Collector id : %d, folder id : %d", collectorId, folderId));
-        
-        Optional<Collector> oc = collectorRepository.findById(collectorId);
-        Optional<Folder> olf = folderRepository.findById(folderId);
-        
-        Library library = new Library();
-        library.setCollector(oc.get());
-        library.setFolder(olf.get());
-        
-        library = libraryRepository.save(library);
-        
-        return ResponseEntity.created(new URI("/api/addCollectorToLibrary/" + library.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, library.getId().toString()))
-            .body(library);
+    public HttpStatus addCollectorToLibrary(@RequestBody ObjectNode obj) {
+    	logger.info("Request to add a Collector to library. Request object : "+obj);
+        try {
+        	Optional<Collector> oc = collectorRepository.findById(obj.get("collectorId").asLong());
+            String appName = obj.get("appName").asText();
+            String dataSource = obj.get("dataSource").asText();
+            
+            Iterator<JsonNode> itr = obj.get("folderIdList").elements();
+            while (itr.hasNext()) {
+    			JsonNode folderId = itr.next();
+    	        
+    			Optional<Folder> olf = folderRepository.findById(folderId.asLong());
+    	        
+    	        Library library = new Library();
+    	        library.setCollector(oc.get());
+    	        library.setFolder(olf.get());
+    	        library.setAppName(appName);
+    	        library.setDataSource(dataSource);
+    	        library = libraryRepository.save(library);
+    		}
+        }catch(Exception e) {
+        	logger.error("Error adding collector to library : ",e);
+        	return HttpStatus.EXPECTATION_FAILED;
+        }
+        return HttpStatus.OK;
     }
     
     /**

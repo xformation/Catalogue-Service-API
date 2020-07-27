@@ -155,6 +155,7 @@ public class CollectorController {
 
 	private Catalog createCatalog(Collector collector) {
 		Catalog catalog = new Catalog();
+		catalog.setId(collector.getId());
 		catalog.setCatalogName(collector.getName());
 		catalog.setType(collector.getType());
 		catalog.setCatalogDescription(collector.getDescription());

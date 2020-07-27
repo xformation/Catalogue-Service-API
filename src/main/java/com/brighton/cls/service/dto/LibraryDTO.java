@@ -1,5 +1,6 @@
 package com.brighton.cls.service.dto;
 
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 /**
@@ -8,6 +9,13 @@ import java.io.Serializable;
 public class LibraryDTO implements Serializable {
     
     private Long id;
+
+    private String appName;
+
+    @Size(max = 2000)
+    private String virtualPath;
+
+    private String dataSource;
 
 
     private Long collectorId;
@@ -20,6 +28,30 @@ public class LibraryDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public String getVirtualPath() {
+        return virtualPath;
+    }
+
+    public void setVirtualPath(String virtualPath) {
+        this.virtualPath = virtualPath;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
     }
 
     public Long getCollectorId() {
@@ -60,6 +92,9 @@ public class LibraryDTO implements Serializable {
     public String toString() {
         return "LibraryDTO{" +
             "id=" + getId() +
+            ", appName='" + getAppName() + "'" +
+            ", virtualPath='" + getVirtualPath() + "'" +
+            ", dataSource='" + getDataSource() + "'" +
             ", collectorId=" + getCollectorId() +
             ", folderId=" + getFolderId() +
             "}";

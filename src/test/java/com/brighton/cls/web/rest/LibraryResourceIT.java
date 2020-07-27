@@ -32,6 +32,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class LibraryResourceIT {
 
+    private static final String DEFAULT_APP_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_APP_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_VIRTUAL_PATH = "AAAAAAAAAA";
+    private static final String UPDATED_VIRTUAL_PATH = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DATA_SOURCE = "AAAAAAAAAA";
+    private static final String UPDATED_DATA_SOURCE = "BBBBBBBBBB";
+
     @Autowired
     private LibraryRepository libraryRepository;
 
@@ -56,7 +65,10 @@ public class LibraryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Library createEntity(EntityManager em) {
-        Library library = new Library();
+        Library library = new Library()
+            .appName(DEFAULT_APP_NAME)
+            .virtualPath(DEFAULT_VIRTUAL_PATH)
+            .dataSource(DEFAULT_DATA_SOURCE);
         return library;
     }
     /**
@@ -66,7 +78,10 @@ public class LibraryResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Library createUpdatedEntity(EntityManager em) {
-        Library library = new Library();
+        Library library = new Library()
+            .appName(UPDATED_APP_NAME)
+            .virtualPath(UPDATED_VIRTUAL_PATH)
+            .dataSource(UPDATED_DATA_SOURCE);
         return library;
     }
 
@@ -90,6 +105,9 @@ public class LibraryResourceIT {
         List<Library> libraryList = libraryRepository.findAll();
         assertThat(libraryList).hasSize(databaseSizeBeforeCreate + 1);
         Library testLibrary = libraryList.get(libraryList.size() - 1);
+        assertThat(testLibrary.getAppName()).isEqualTo(DEFAULT_APP_NAME);
+        assertThat(testLibrary.getVirtualPath()).isEqualTo(DEFAULT_VIRTUAL_PATH);
+        assertThat(testLibrary.getDataSource()).isEqualTo(DEFAULT_DATA_SOURCE);
     }
 
     @Test
@@ -123,7 +141,10 @@ public class LibraryResourceIT {
         restLibraryMockMvc.perform(get("/api/libraries?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(library.getId().intValue())));
+            .andExpect(jsonPath("$.[*].id").value(hasItem(library.getId().intValue())))
+            .andExpect(jsonPath("$.[*].appName").value(hasItem(DEFAULT_APP_NAME)))
+            .andExpect(jsonPath("$.[*].virtualPath").value(hasItem(DEFAULT_VIRTUAL_PATH)))
+            .andExpect(jsonPath("$.[*].dataSource").value(hasItem(DEFAULT_DATA_SOURCE)));
     }
     
     @Test
@@ -136,7 +157,10 @@ public class LibraryResourceIT {
         restLibraryMockMvc.perform(get("/api/libraries/{id}", library.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.id").value(library.getId().intValue()));
+            .andExpect(jsonPath("$.id").value(library.getId().intValue()))
+            .andExpect(jsonPath("$.appName").value(DEFAULT_APP_NAME))
+            .andExpect(jsonPath("$.virtualPath").value(DEFAULT_VIRTUAL_PATH))
+            .andExpect(jsonPath("$.dataSource").value(DEFAULT_DATA_SOURCE));
     }
     @Test
     @Transactional
@@ -158,6 +182,10 @@ public class LibraryResourceIT {
         Library updatedLibrary = libraryRepository.findById(library.getId()).get();
         // Disconnect from session so that the updates on updatedLibrary are not directly saved in db
         em.detach(updatedLibrary);
+        updatedLibrary
+            .appName(UPDATED_APP_NAME)
+            .virtualPath(UPDATED_VIRTUAL_PATH)
+            .dataSource(UPDATED_DATA_SOURCE);
         LibraryDTO libraryDTO = libraryMapper.toDto(updatedLibrary);
 
         restLibraryMockMvc.perform(put("/api/libraries")
@@ -169,6 +197,9 @@ public class LibraryResourceIT {
         List<Library> libraryList = libraryRepository.findAll();
         assertThat(libraryList).hasSize(databaseSizeBeforeUpdate);
         Library testLibrary = libraryList.get(libraryList.size() - 1);
+        assertThat(testLibrary.getAppName()).isEqualTo(UPDATED_APP_NAME);
+        assertThat(testLibrary.getVirtualPath()).isEqualTo(UPDATED_VIRTUAL_PATH);
+        assertThat(testLibrary.getDataSource()).isEqualTo(UPDATED_DATA_SOURCE);
     }
 
     @Test
