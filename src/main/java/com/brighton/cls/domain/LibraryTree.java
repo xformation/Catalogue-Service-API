@@ -27,6 +27,7 @@ public class LibraryTree implements Serializable {
     private String updatedOn;
     private Date updatedBy;
     private String lastModified;
+    private List<CatalogDetail> dashboardList = new ArrayList();
     
 	public Boolean getHasChild() {
 		return hasChild;
@@ -186,6 +187,14 @@ public class LibraryTree implements Serializable {
 
 	public void setItems(List<LibraryTree> items) {
 		this.items = items;
+	}
+
+	public List<CatalogDetail> getDashboardList() {
+		return dashboardList;
+	}
+
+	public void setDashboardList(List<CatalogDetail> dashboardList) {
+		this.dashboardList = dashboardList;
 	}
     
 	

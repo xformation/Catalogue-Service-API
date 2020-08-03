@@ -1,11 +1,18 @@
 package com.brighton.cls.domain;
 
 public class CatalogDetail {
-	
+	private Long Id;
 	private String title;
 	private String description;
 	private boolean open = false;
 	private String dashboardJson;
+	
+	public Long getId() {
+		return Id;
+	}
+	public void setId(Long id) {
+		Id = id;
+	}
 	
 	public String getTitle() {
 		return title;

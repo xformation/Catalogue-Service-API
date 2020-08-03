@@ -2,8 +2,10 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
 import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.repository.CollectorRepository;
@@ -129,9 +132,50 @@ public class DashboardController {
      * @return the {@link List<Dashboard>} with status {@code 200 (OK)} and the list of dashboards.
      */
     @GetMapping("/listDashboard")
-    public List<Dashboard> listAllDashboard() {
-        logger.info("Request to get all dashboards");
-        return dashboardRepository.findAll(Sort.by(Direction.DESC, "id"));
+    public List<CatalogDetail> listAllDashboard(@RequestParam(required = false)  Long id, @RequestParam(required = false)  String isFolder) {
+        if(!StringUtils.isBlank(isFolder) && !Objects.isNull(id)) {
+        	logger.info("Request to get dashboards for id : "+id);
+        	if(Boolean.valueOf(isFolder)) {
+        		logger.info("Getting all dashboards of the given collector id : "+id);
+        		Collector col = collectorRepository.findById(id).get();
+        		Dashboard dashboard = new Dashboard();
+        		dashboard.setCollector(col);
+        		List<Dashboard> dashList = dashboardRepository.findAll(Example.of(dashboard));
+        		List<CatalogDetail> catList = new ArrayList<>();
+        		for(Dashboard d: dashList) {
+        			CatalogDetail cd = new CatalogDetail();
+        			cd.setId(d.getId());
+        			cd.setTitle(d.getName());
+        			cd.setDescription(d.getDescription());
+        			cd.setDashboardJson(new String(d.getDashboard()));
+        			catList.add(cd);
+        		}
+        		return catList;
+        	}else {
+        		logger.info("Getting a dashboard of the given id : "+id);
+        		Dashboard d = dashboardRepository.findById(id).get();
+        		CatalogDetail cd = new CatalogDetail();
+    			cd.setId(d.getId());
+    			cd.setTitle(d.getName());
+    			cd.setDescription(d.getDescription());
+    			cd.setDashboardJson(new String(d.getDashboard()));
+    			List<CatalogDetail> list = new ArrayList<>();
+        		list.add(cd);
+        		return list;
+        	}
+        }
+    	logger.info("Request to get all dashboards");
+        List<Dashboard> dashList =  dashboardRepository.findAll(Sort.by(Direction.DESC, "id"));
+        List<CatalogDetail> catList = new ArrayList<>();
+		for(Dashboard d: dashList) {
+			CatalogDetail cd = new CatalogDetail();
+			cd.setId(d.getId());
+			cd.setTitle(d.getName());
+			cd.setDescription(d.getDescription());
+			cd.setDashboardJson(new String(d.getDashboard()));
+			catList.add(cd);
+		}
+		return catList;
     }
 
     /**

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
@@ -27,12 +26,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
+import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.domain.Folder;
-import com.brighton.cls.domain.FolderTree;
 import com.brighton.cls.domain.Library;
 import com.brighton.cls.domain.LibraryTree;
 import com.brighton.cls.repository.CollectorRepository;
+import com.brighton.cls.repository.DashboardRepository;
 import com.brighton.cls.repository.FolderRepository;
 import com.brighton.cls.repository.LibraryRepository;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -63,6 +64,8 @@ public class LibraryController {
     @Autowired
     private LibraryRepository libraryRepository;
     
+    @Autowired
+    private DashboardRepository dashboardRepository;
     
 
     /**
@@ -167,6 +170,17 @@ public class LibraryController {
     		collectorNode.setDescription(col.getDescription());
     		collectorNode.setIsFolder(false);
     		collectorNode.setHasChild(false);
+    		
+    		Dashboard dashboard = new Dashboard();
+    		dashboard.setCollector(col);
+    		List<Dashboard> dsList = dashboardRepository.findAll(Example.of(dashboard));
+    		for(Dashboard d: dsList) {
+    			CatalogDetail cd = new CatalogDetail();
+    			cd.setId(d.getId());
+    			cd.setTitle(d.getName());
+    			cd.setDescription(d.getDescription());
+    			collectorNode.getDashboardList().add(cd);
+    		}
     		folderNode.getItems().add(collectorNode);
         }
         
@@ -196,7 +210,6 @@ public class LibraryController {
     		parentNode.setHasChild(true);
     		parentNode.setName(parentFolder.getTitle());
     		parentNode.setDescription("folder description to do");
-    		
     		
     		parentNode.getItems().add(libraryTree);
     		getTree(parentNode, finalTree);
