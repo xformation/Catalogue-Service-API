@@ -78,6 +78,9 @@ public class FolderController {
         	}else {
         		logger.warn("Invalid parent id. Cannot save this record");
         	}
+        }else {
+        	logger.debug("No parent provided. Its a root folder");
+        	folder = folderRepository.save(folder);
         }
     	
         List<Folder> list = getAllFolders();
