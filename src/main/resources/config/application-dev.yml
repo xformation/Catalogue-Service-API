@@ -71,7 +71,7 @@ spring:
         enabled: true
 
 server:
-  port: 4000
+  port: 5040
 
 # ===================================================================
 # JHipster specific properties
