@@ -64,12 +64,22 @@ public class FolderController {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/addFolder")
-    public ResponseEntity<List<Folder>> addFolder(@RequestParam String title) throws URISyntaxException {
+    public ResponseEntity<List<Folder>> addFolder(@RequestParam String title, 
+    		@RequestParam (name = "parentId", required = false) Long parentId) throws URISyntaxException {
         logger.info(String.format("Request to create a folder. folder : %s", title));
     	Folder folder = new Folder();
     	folder.setTitle(title);
-        
-    	folder = folderRepository.save(folder);
+        if(!Objects.isNull(parentId)) {
+        	Optional<Folder> of = this.folderRepository.findById(parentId);
+        	if(of.isPresent()) {
+        		folder.setParentId(parentId);
+        		folder = folderRepository.save(folder);
+        		logger.debug("Folder created : ", folder);
+        	}else {
+        		logger.warn("Invalid parent id. Cannot save this record");
+        	}
+        }
+    	
         List<Folder> list = getAllFolders();
         return ResponseEntity.created(new URI("/api/addFolder/" + folder.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, folder.getId().toString()))
