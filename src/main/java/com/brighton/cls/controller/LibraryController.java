@@ -2,19 +2,14 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
@@ -26,16 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
-import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.domain.Folder;
 import com.brighton.cls.domain.Library;
 import com.brighton.cls.domain.LibraryTree;
 import com.brighton.cls.repository.CollectorRepository;
-import com.brighton.cls.repository.DashboardRepository;
 import com.brighton.cls.repository.FolderRepository;
 import com.brighton.cls.repository.LibraryRepository;
+import com.brighton.cls.util.TreeService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -65,9 +58,8 @@ public class LibraryController {
     private LibraryRepository libraryRepository;
     
     @Autowired
-    private DashboardRepository dashboardRepository;
+    private TreeService treeService;
     
-
     /**
      * {@code POST  /addCollectorToLibrary} : add an entry in library.
      *
@@ -142,82 +134,7 @@ public class LibraryController {
     
     @GetMapping("/listLibraryTree")
     public List<LibraryTree> getLibraryTree() {
-    	List<LibraryTree> parentList = new ArrayList<>();
-        logger.debug("Request to get library tree");
-        List<Library> libraryList = libraryRepository.findAll(Sort.by(Direction.DESC, "id"));
-        Map<Long, LibraryTree> orgMap = new HashMap<Long, LibraryTree>();  
-        
-        for(Library library: libraryList) {
-        	LibraryTree folderNode = null;
-        	if(!orgMap.containsKey(library.getFolder().getId())) {
-        		folderNode = new LibraryTree();
-        		folderNode.setId(library.getFolder().getId());
-        		folderNode.setParentId(library.getFolder().getParentId());
-        		folderNode.setIsFolder(true);
-        		folderNode.setHasChild(true);
-        		folderNode.setName(library.getFolder().getTitle());
-        		folderNode.setDescription("folder description to do");
-        		
-        		orgMap.put(library.getFolder().getId(), folderNode);
-        	}else {
-        		folderNode = orgMap.get(library.getFolder().getId());
-        	}
-        	Collector col = library.getCollector();
-    		LibraryTree collectorNode = new LibraryTree();
-    		collectorNode.setId(col.getId());
-    		collectorNode.setParentId(folderNode.getId());
-    		collectorNode.setName(col.getName());
-    		collectorNode.setDescription(col.getDescription());
-    		collectorNode.setIsFolder(false);
-    		collectorNode.setHasChild(false);
-    		
-    		Dashboard dashboard = new Dashboard();
-    		dashboard.setCollector(col);
-    		List<Dashboard> dsList = dashboardRepository.findAll(Example.of(dashboard));
-    		for(Dashboard d: dsList) {
-    			CatalogDetail cd = new CatalogDetail();
-    			cd.setId(d.getId());
-    			cd.setTitle(d.getName());
-    			cd.setDescription(d.getDescription());
-    			collectorNode.getDashboardList().add(cd);
-    		}
-    		folderNode.getItems().add(collectorNode);
-        }
-        
-        for(LibraryTree lt : orgMap.values()) {
-        	getTree(lt, parentList);
-        }
-        LibraryTree finalTree = new LibraryTree();
-        finalTree.setName("Library");
-        finalTree.setIsFolder(true);
-        for(LibraryTree lt: parentList) {
-        	finalTree.getItems().add(lt);
-        }
-        List<LibraryTree> finalList = new ArrayList<>();
-        finalList.add(finalTree);
-        return finalList;
+    	return treeService.getLibraryTree();
     }
-    
-    private void getTree(LibraryTree libraryTree, List<LibraryTree> finalTree) {
-    	
-    	if(!Objects.isNull(libraryTree.getParentId())) {
-    		Folder parentFolder = folderRepository.findById(libraryTree.getParentId()).get();
-    		LibraryTree parentNode = new LibraryTree();
-    		
-    		parentNode.setId(parentFolder.getId());
-    		parentNode.setParentId(parentFolder.getParentId());
-    		parentNode.setIsFolder(true);
-    		parentNode.setHasChild(true);
-    		parentNode.setName(parentFolder.getTitle());
-    		parentNode.setDescription("folder description to do");
-    		
-    		parentNode.getItems().add(libraryTree);
-    		getTree(parentNode, finalTree);
-    		
-    	}else {
-    		finalTree.add(libraryTree);
-    	}
-    }
-
     
 }

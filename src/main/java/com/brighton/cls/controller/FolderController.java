@@ -2,7 +2,6 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +9,6 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
@@ -27,9 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.brighton.cls.domain.Folder;
 import com.brighton.cls.domain.FolderTree;
 import com.brighton.cls.domain.Library;
-import com.brighton.cls.repository.CollectorRepository;
 import com.brighton.cls.repository.FolderRepository;
 import com.brighton.cls.repository.LibraryRepository;
+import com.brighton.cls.util.TreeService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 
@@ -51,10 +49,10 @@ public class FolderController {
     private FolderRepository folderRepository;
     
     @Autowired
-    private CollectorRepository collectorRepository;
+    private LibraryRepository libraryRepository;
     
     @Autowired
-    private LibraryRepository libraryRepository;
+    private TreeService treeService;
     
     /**
      * {@code POST  /addFolder} : Create a new folder.
@@ -104,60 +102,10 @@ public class FolderController {
     
     @GetMapping("/listFolderTree")
     public List<FolderTree> getFoldersTree() {
-    	List<FolderTree> parentList = new ArrayList<>();
         logger.debug("Request to get folders tree");
-        List<Folder> folderList = folderRepository.findAll(Sort.by(Direction.DESC, "id"));
+        return treeService.getFoldersTree();
+    }
         
-        for(Folder f: folderList) {
-        	boolean hasChild = hasChildren(f);
-            FolderTree node = new FolderTree();
-        	node.setHasChild(hasChild);
-        	if(Objects.isNull(f.getParentId())) {
-        		BeanUtils.copyProperties(f, node);
-        		parentList.add(node);
-        	}
-        }
-        getTree(parentList);
-        return parentList;
-    }
-    
-    private void getTree(List<FolderTree> parentList) {
-    	for(FolderTree ft: parentList) {
-    		if(ft.getHasChild()) {
-    			List<FolderTree> subList = getSubFolderList(ft.getId());
-    			for(FolderTree cft: subList) {
-    				Folder f = new Folder();
-    				BeanUtils.copyProperties(cft, f);
-    				boolean hasChild = hasChildren(f);
-    				cft.setHasChild(hasChild);
-    			}
-    			ft.setSubData(subList);
-    			getTree(subList);
-    		}
-    	}
-    }
-    
-    private boolean hasChildren(Folder parent) {
-		List<FolderTree> list = getSubFolderList(parent.getId());
-		if(list.size() > 0) {
-			return true;
-		}
-        return false;
-    }
-    
-    private List<FolderTree> getSubFolderList(Long parentId){
-    	Folder f = new Folder();
-    	f.setParentId(parentId);
-    	List<Folder> listF = this.folderRepository.findAll(Example.of(f), Sort.by(Direction.ASC, "title"));
-    	List<FolderTree> childList = new ArrayList<>();
-    	for(Folder fl: listF) {
-    		FolderTree node = new FolderTree();
-    		BeanUtils.copyProperties(fl, node);
-    		childList.add(node);
-    	}
-    	return childList;
-    }
-    
     /**
      * {@code GET  /listCollectorOfFolder/{folder}} : get all the collectors of a folder.
      *
