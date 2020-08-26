@@ -5,8 +5,8 @@ package com.brighton.cls.config;
  */
 public final class Constants {
 
-    public static final String SYSTEM_ACCOUNT = "system";
-
+    public static final String SYSTEM_ACCOUNT = "System Admin";
+    
     private Constants() {
     }
 }

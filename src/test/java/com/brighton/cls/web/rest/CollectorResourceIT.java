@@ -17,6 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +45,18 @@ public class CollectorResourceIT {
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_UPDATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_UPDATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private CollectorRepository collectorRepository;
@@ -72,7 +86,11 @@ public class CollectorResourceIT {
             .name(DEFAULT_NAME)
             .type(DEFAULT_TYPE)
             .datasource(DEFAULT_DATASOURCE)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdOn(DEFAULT_CREATED_ON)
+            .updatedBy(DEFAULT_UPDATED_BY)
+            .updatedOn(DEFAULT_UPDATED_ON);
         return collector;
     }
     /**
@@ -86,7 +104,11 @@ public class CollectorResourceIT {
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
             .datasource(UPDATED_DATASOURCE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         return collector;
     }
 
@@ -114,6 +136,10 @@ public class CollectorResourceIT {
         assertThat(testCollector.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(DEFAULT_DATASOURCE);
         assertThat(testCollector.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testCollector.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testCollector.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
+        assertThat(testCollector.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testCollector.getUpdatedOn()).isEqualTo(DEFAULT_UPDATED_ON);
     }
 
     @Test
@@ -151,7 +177,11 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].datasource").value(hasItem(DEFAULT_DATASOURCE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
     }
     
     @Test
@@ -168,7 +198,11 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
             .andExpect(jsonPath("$.datasource").value(DEFAULT_DATASOURCE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
+            .andExpect(jsonPath("$.updatedOn").value(DEFAULT_UPDATED_ON.toString()));
     }
     @Test
     @Transactional
@@ -194,7 +228,11 @@ public class CollectorResourceIT {
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
             .datasource(UPDATED_DATASOURCE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         CollectorDTO collectorDTO = collectorMapper.toDto(updatedCollector);
 
         restCollectorMockMvc.perform(put("/api/collectors")
@@ -210,6 +248,10 @@ public class CollectorResourceIT {
         assertThat(testCollector.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(UPDATED_DATASOURCE);
         assertThat(testCollector.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testCollector.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testCollector.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testCollector.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testCollector.getUpdatedOn()).isEqualTo(UPDATED_UPDATED_ON);
     }
 
     @Test

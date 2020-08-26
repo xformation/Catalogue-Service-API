@@ -4,6 +4,7 @@ package com.brighton.cls.domain;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * A Folder.
@@ -33,6 +34,18 @@ public class Folder implements Serializable {
 
     @Column(name = "is_folder")
     private Boolean isFolder;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "created_on")
+    private Instant createdOn;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @Column(name = "updated_on")
+    private Instant updatedOn;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -107,7 +120,60 @@ public class Folder implements Serializable {
     public void setIsFolder(Boolean isFolder) {
         this.isFolder = isFolder;
     }
-    
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Folder createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public Folder createdOn(Instant createdOn) {
+        this.createdOn = createdOn;
+        return this;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public Folder updatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+        return this;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Instant getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public Folder updatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+        return this;
+    }
+
+    public void setUpdatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -127,13 +193,17 @@ public class Folder implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "LibraryFolder{" +
+        return "Folder{" +
             "id=" + getId() +
             ", title='" + getTitle() + "'" +
             ", parentId=" + getParentId() +
             ", isOpened='" + isIsOpened() + "'" +
             ", isChecked='" + isIsChecked() + "'" +
             ", isFolder='" + isIsFolder() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdOn='" + getCreatedOn() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", updatedOn='" + getUpdatedOn() + "'" +
             "}";
     }
 }

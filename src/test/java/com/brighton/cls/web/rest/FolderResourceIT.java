@@ -17,6 +17,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +49,18 @@ public class FolderResourceIT {
     private static final Boolean DEFAULT_IS_FOLDER = false;
     private static final Boolean UPDATED_IS_FOLDER = true;
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_UPDATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_UPDATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     @Autowired
     private FolderRepository folderRepository;
 
@@ -76,7 +90,11 @@ public class FolderResourceIT {
             .parentId(DEFAULT_PARENT_ID)
             .isOpened(DEFAULT_IS_OPENED)
             .isChecked(DEFAULT_IS_CHECKED)
-            .isFolder(DEFAULT_IS_FOLDER);
+            .isFolder(DEFAULT_IS_FOLDER)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdOn(DEFAULT_CREATED_ON)
+            .updatedBy(DEFAULT_UPDATED_BY)
+            .updatedOn(DEFAULT_UPDATED_ON);
         return folder;
     }
     /**
@@ -91,7 +109,11 @@ public class FolderResourceIT {
             .parentId(UPDATED_PARENT_ID)
             .isOpened(UPDATED_IS_OPENED)
             .isChecked(UPDATED_IS_CHECKED)
-            .isFolder(UPDATED_IS_FOLDER);
+            .isFolder(UPDATED_IS_FOLDER)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         return folder;
     }
 
@@ -120,6 +142,10 @@ public class FolderResourceIT {
         assertThat(testFolder.isIsOpened()).isEqualTo(DEFAULT_IS_OPENED);
         assertThat(testFolder.isIsChecked()).isEqualTo(DEFAULT_IS_CHECKED);
         assertThat(testFolder.isIsFolder()).isEqualTo(DEFAULT_IS_FOLDER);
+        assertThat(testFolder.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testFolder.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
+        assertThat(testFolder.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testFolder.getUpdatedOn()).isEqualTo(DEFAULT_UPDATED_ON);
     }
 
     @Test
@@ -158,7 +184,11 @@ public class FolderResourceIT {
             .andExpect(jsonPath("$.[*].parentId").value(hasItem(DEFAULT_PARENT_ID.intValue())))
             .andExpect(jsonPath("$.[*].isOpened").value(hasItem(DEFAULT_IS_OPENED.booleanValue())))
             .andExpect(jsonPath("$.[*].isChecked").value(hasItem(DEFAULT_IS_CHECKED.booleanValue())))
-            .andExpect(jsonPath("$.[*].isFolder").value(hasItem(DEFAULT_IS_FOLDER.booleanValue())));
+            .andExpect(jsonPath("$.[*].isFolder").value(hasItem(DEFAULT_IS_FOLDER.booleanValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
     }
     
     @Test
@@ -176,7 +206,11 @@ public class FolderResourceIT {
             .andExpect(jsonPath("$.parentId").value(DEFAULT_PARENT_ID.intValue()))
             .andExpect(jsonPath("$.isOpened").value(DEFAULT_IS_OPENED.booleanValue()))
             .andExpect(jsonPath("$.isChecked").value(DEFAULT_IS_CHECKED.booleanValue()))
-            .andExpect(jsonPath("$.isFolder").value(DEFAULT_IS_FOLDER.booleanValue()));
+            .andExpect(jsonPath("$.isFolder").value(DEFAULT_IS_FOLDER.booleanValue()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
+            .andExpect(jsonPath("$.updatedOn").value(DEFAULT_UPDATED_ON.toString()));
     }
     @Test
     @Transactional
@@ -203,7 +237,11 @@ public class FolderResourceIT {
             .parentId(UPDATED_PARENT_ID)
             .isOpened(UPDATED_IS_OPENED)
             .isChecked(UPDATED_IS_CHECKED)
-            .isFolder(UPDATED_IS_FOLDER);
+            .isFolder(UPDATED_IS_FOLDER)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         FolderDTO folderDTO = folderMapper.toDto(updatedFolder);
 
         restFolderMockMvc.perform(put("/api/folders")
@@ -220,6 +258,10 @@ public class FolderResourceIT {
         assertThat(testFolder.isIsOpened()).isEqualTo(UPDATED_IS_OPENED);
         assertThat(testFolder.isIsChecked()).isEqualTo(UPDATED_IS_CHECKED);
         assertThat(testFolder.isIsFolder()).isEqualTo(UPDATED_IS_FOLDER);
+        assertThat(testFolder.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testFolder.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testFolder.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testFolder.getUpdatedOn()).isEqualTo(UPDATED_UPDATED_ON);
     }
 
     @Test

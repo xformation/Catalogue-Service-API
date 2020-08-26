@@ -4,6 +4,11 @@ entity Collector {
     type String
     datasource String
     description String maxlength(5000)
+    createdBy String
+	createdOn Instant
+	updatedBy String
+	updatedOn Instant
+	
 }
 
 entity Dashboard {
@@ -24,6 +29,11 @@ entity Folder {
 	isOpened Boolean
 	isChecked Boolean
 	isFolder Boolean
+	createdBy String
+	createdOn Instant
+	updatedBy String
+	updatedOn Instant
+	
 }
 
 relationship ManyToOne {

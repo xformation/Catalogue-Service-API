@@ -2,12 +2,14 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.config.Constants;
 import com.brighton.cls.domain.Catalog;
 import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
@@ -68,13 +71,28 @@ public class CollectorController {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/addCollector")
-    public ResponseEntity<List<Catalog>> addCollector(@RequestParam String name, @RequestParam String type, @RequestParam(required = false) String description) throws URISyntaxException {
+    public ResponseEntity<List<Catalog>> addCollector(@RequestParam String name, 
+    		@RequestParam String type,
+    		@RequestParam(required = false) String description,
+    		@RequestParam (name = "userName", required = false) String userName) throws URISyntaxException {
         logger.info(String.format("Request to create a Collector. Collector name : %s, type : %s", name, type));
     	Collector collector = new Collector();
         collector.setName(name);
         collector.setType(type);
         collector.setDescription(description);
         
+        if(!StringUtils.isBlank(userName)) {
+        	collector.setCreatedBy(userName);
+        	collector.setUpdatedBy(userName);
+    	}else {
+    		collector.setCreatedBy(Constants.SYSTEM_ACCOUNT);
+    		collector.setUpdatedBy(Constants.SYSTEM_ACCOUNT);
+    	}
+    	Instant now = Instant.now();
+    	collector.setCreatedOn(now);
+    	collector.setUpdatedOn(now);
+        
+    	
         collector = collectorRepository.save(collector);
         List<Catalog> list = getAllCollectors();
         return ResponseEntity.created(new URI("/api/addCollector/" + collector.getId()))

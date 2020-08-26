@@ -1,5 +1,8 @@
 package com.brighton.cls.util;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -46,13 +49,18 @@ public class TreeService {
     	List<FolderTree> parentList = new ArrayList<>();
         logger.debug("Getting folder tree");
         List<Folder> folderList = folderRepository.findAll(Sort.by(Direction.DESC, "id"));
-        
+        LocalDateTime datetime = null;
         for(Folder f: folderList) {
         	boolean hasChild = hasChildren(f);
             FolderTree node = new FolderTree();
         	node.setHasChild(hasChild);
         	if(Objects.isNull(f.getParentId())) {
         		BeanUtils.copyProperties(f, node);
+//        		Instant in = f.getUpdatedOn();
+        		datetime = LocalDateTime.ofInstant(f.getUpdatedOn(), ZoneId.systemDefault());
+        		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+        		node.setCreatedBy(f.getUpdatedBy());
+        		node.setLastModified(formatedDate + " by "+ f.getUpdatedBy());
         		parentList.add(node);
         	}
         }
@@ -89,9 +97,14 @@ public class TreeService {
     	f.setParentId(parentId);
     	List<Folder> listF = this.folderRepository.findAll(Example.of(f), Sort.by(Direction.ASC, "title"));
     	List<FolderTree> childList = new ArrayList<>();
+    	LocalDateTime datetime = null;
     	for(Folder fl: listF) {
     		FolderTree node = new FolderTree();
     		BeanUtils.copyProperties(fl, node);
+    		datetime = LocalDateTime.ofInstant(fl.getUpdatedOn(), ZoneId.systemDefault());
+    		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+    		node.setCreatedBy(fl.getUpdatedBy());
+    		node.setLastModified(formatedDate + " by "+ fl.getUpdatedBy());
     		childList.add(node);
     	}
     	return childList;
@@ -118,6 +131,7 @@ public class TreeService {
     		lb.setFolder(fl);
     		List<Library> libraryList = libraryRepository.findAll(Example.of(lb));
     		
+    		LocalDateTime datetime = null;
     		for(Library library: libraryList) {
             	Collector col = library.getCollector();
         		LibraryTree collectorNode = new LibraryTree();
@@ -127,6 +141,11 @@ public class TreeService {
         		collectorNode.setDescription(col.getDescription());
         		collectorNode.setIsFolder(false);
         		collectorNode.setHasChild(false);
+        		
+        		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
+        		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+        		collectorNode.setCreatedBy(col.getUpdatedBy());
+        		collectorNode.setLastModified(formatedDate + " by "+ col.getUpdatedBy());
         		
         		Dashboard dashboard = new Dashboard();
         		dashboard.setCollector(col);
@@ -160,7 +179,7 @@ public class TreeService {
     
     private void getSubLibraryTree(FolderTree ftObj, LibraryTree parentFolderNode) {
     	List<FolderTree> ftList = ftObj.getSubData();
-    	
+    	LocalDateTime datetime = null;
     	for(FolderTree ft: ftList) {
     		LibraryTree folderNode = new LibraryTree();
     		BeanUtils.copyProperties(ft, folderNode);
@@ -186,6 +205,12 @@ public class TreeService {
         		collectorNode.setDescription(col.getDescription());
         		collectorNode.setIsFolder(false);
         		collectorNode.setHasChild(false);
+        		
+        		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
+        		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+        		collectorNode.setCreatedBy(col.getUpdatedBy());
+        		collectorNode.setLastModified(formatedDate + " by "+ col.getUpdatedBy());
+        		
         		
         		Dashboard dashboard = new Dashboard();
         		dashboard.setCollector(col);

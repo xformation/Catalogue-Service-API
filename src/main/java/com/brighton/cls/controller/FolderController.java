@@ -2,11 +2,13 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.config.Constants;
 import com.brighton.cls.domain.Folder;
 import com.brighton.cls.domain.FolderTree;
 import com.brighton.cls.domain.Library;
@@ -63,10 +66,21 @@ public class FolderController {
      */
     @PostMapping("/addFolder")
     public ResponseEntity<List<Folder>> addFolder(@RequestParam String title, 
-    		@RequestParam (name = "parentId", required = false) Long parentId) throws URISyntaxException {
+    		@RequestParam (name = "parentId", required = false) Long parentId,
+    		@RequestParam (name = "userName", required = false) String userName) throws URISyntaxException {
         logger.info(String.format("Request to create a folder. folder : %s", title));
     	Folder folder = new Folder();
     	folder.setTitle(title);
+    	if(!StringUtils.isBlank(userName)) {
+    		folder.setCreatedBy(userName);
+    		folder.setUpdatedBy(userName);
+    	}else {
+    		folder.setCreatedBy(Constants.SYSTEM_ACCOUNT);
+    		folder.setUpdatedBy(Constants.SYSTEM_ACCOUNT);
+    	}
+    	Instant now = Instant.now();
+    	folder.setCreatedOn(now);
+    	folder.setUpdatedOn(now);
         if(!Objects.isNull(parentId)) {
         	Optional<Folder> of = this.folderRepository.findById(parentId);
         	if(of.isPresent()) {

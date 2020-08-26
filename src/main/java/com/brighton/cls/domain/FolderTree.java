@@ -20,6 +20,8 @@ public class FolderTree implements Serializable {
     private Boolean isFolder= Boolean.TRUE;
     private List<FolderTree> subData = new ArrayList<>();
     private Boolean hasChild = Boolean.FALSE;
+    private String createdBy;
+    private String lastModified;
     
     public Boolean getHasChild() {
 		return hasChild;
@@ -149,4 +151,20 @@ public class FolderTree implements Serializable {
             ", isFolder='" + isIsFolder() + "'" +
             "}";
     }
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(String lastModified) {
+		this.lastModified = lastModified;
+	}
 }

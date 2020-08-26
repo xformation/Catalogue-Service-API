@@ -8,15 +8,4 @@ public class FolderMapperTest {
 
     private FolderMapper folderMapper;
 
-//    @BeforeEach
-//    public void setUp() {
-//        folderMapper = new FolderMapperImpl();
-//    }
-//
-//    @Test
-//    public void testEntityFromId() {
-//        Long id = 1L;
-//        assertThat(folderMapper.fromId(id).getId()).isEqualTo(id);
-//        assertThat(folderMapper.fromId(null)).isNull();
-//    }
 }

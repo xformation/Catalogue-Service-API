@@ -1,5 +1,6 @@
 package com.brighton.cls.service.dto;
 
+import java.time.Instant;
 import java.io.Serializable;
 
 /**
@@ -18,6 +19,14 @@ public class FolderDTO implements Serializable {
     private Boolean isChecked;
 
     private Boolean isFolder;
+
+    private String createdBy;
+
+    private Instant createdOn;
+
+    private String updatedBy;
+
+    private Instant updatedOn;
 
     
     public Long getId() {
@@ -68,6 +77,38 @@ public class FolderDTO implements Serializable {
         this.isFolder = isFolder;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Instant getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,6 +136,10 @@ public class FolderDTO implements Serializable {
             ", isOpened='" + isIsOpened() + "'" +
             ", isChecked='" + isIsChecked() + "'" +
             ", isFolder='" + isIsFolder() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdOn='" + getCreatedOn() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", updatedOn='" + getUpdatedOn() + "'" +
             "}";
     }
 }
