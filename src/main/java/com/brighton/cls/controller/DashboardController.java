@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -194,4 +195,19 @@ public class DashboardController {
                 .body(dashboard);
     }
     
+    /**
+     * {@code DELETE  /deleteDashboard/:id} : delete the "id" dashboard.
+     *
+     * @param id the id of the dashboardDTO to delete.
+     * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
+     * @throws URISyntaxException 
+     */
+    @DeleteMapping("/deleteDashboard/{id}")
+    public ResponseEntity<Integer> deleteDashboard(@PathVariable Long id) throws URISyntaxException {
+    	logger.debug("Request to delete Dashboard : Dashboard id : ", id);
+        dashboardRepository.deleteById(id);
+        return ResponseEntity.created(new URI("/api/deleteDashboard/" + id))
+        .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, id.toString()))
+        .body(HttpStatus.OK.value());
+    }
 }
