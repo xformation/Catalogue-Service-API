@@ -138,6 +138,8 @@ public class Library implements Serializable {
             ", appName='" + getAppName() + "'" +
             ", virtualPath='" + getVirtualPath() + "'" +
             ", dataSource='" + getDataSource() + "'" +
+            ", Collector='" + getCollector() + "'" +
+            ", Folder='" + getFolder() + "'" +
             "}";
     }
 }

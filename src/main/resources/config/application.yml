@@ -51,6 +51,7 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
+    #dropFirst: true
   mail:
     host: localhost
     port: 25
@@ -71,7 +72,7 @@ spring:
         enabled: true
 
 server:
-  port: 5040
+  port: 5050
 
 # ===================================================================
 # JHipster specific properties

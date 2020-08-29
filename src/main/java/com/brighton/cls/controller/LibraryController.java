@@ -10,11 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brighton.cls.domain.Collector;
+import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.domain.Folder;
 import com.brighton.cls.domain.Library;
 import com.brighton.cls.domain.LibraryTree;
@@ -119,6 +123,52 @@ public class LibraryController {
         return ResponseEntity.created(new URI("/api/addFolderToLibrary/" + library.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, library.getId().toString()))
             .body(library);
+    }
+   
+    @DeleteMapping("/removeCollector")
+    public ResponseEntity<Integer> removeCollector(@RequestParam Long collectorId, @RequestParam Long folderId) throws URISyntaxException {
+    	logger.debug("Request to delete Dashboard : Collector id : ", collectorId);
+        Optional<Folder> of = folderRepository.findById(folderId);
+    	Optional<Collector> oc = collectorRepository.findById(collectorId);
+    	
+    	if(of.isPresent() && oc.isPresent()) {
+    		Library lib = new Library();
+    		lib.setFolder(of.get());
+    		lib.setCollector(oc.get());
+    		System.out.println(lib);
+    		List<Library> listLib = libraryRepository.findAll(Example.of(lib));
+    		if(listLib.size() > 0) {
+    			for(Library lb: listLib) {
+    				libraryRepository.deleteById(lb.getId());
+    			}
+    		}
+    	}
+    	
+    	return ResponseEntity.created(new URI("/api/removeCollector/"))
+        .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, ""))
+        .body(HttpStatus.OK.value());
+    }
+    @DeleteMapping("/removeFolder/{folderId}")
+    public ResponseEntity<Integer> removeFolder(@PathVariable Long folderId) throws URISyntaxException {
+    	logger.info(String.format("Request to delete a Collector. Folder id : %d", folderId));
+    	Optional<Folder> of = folderRepository.findById(folderId);
+    	if(of.isPresent()) {
+    		Library lib = new Library();
+    		lib.setFolder(of.get());
+    		
+    		System.out.println(lib);
+    		List<Library> listLib = libraryRepository.findAll(Example.of(lib));
+    		if(listLib.size() > 0) {
+    			for(Library lb: listLib) {
+    				libraryRepository.deleteById(lb.getId());
+    			}
+    		}
+ 
+    	}
+    	
+    	return ResponseEntity.created(new URI("/api/removeFolder/"))
+        .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, ""))
+        .body(HttpStatus.OK.value());
     }
     
     /**
