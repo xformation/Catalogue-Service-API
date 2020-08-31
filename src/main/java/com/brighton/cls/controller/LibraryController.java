@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brighton.cls.domain.Collector;
-import com.brighton.cls.domain.Dashboard;
 import com.brighton.cls.domain.Folder;
 import com.brighton.cls.domain.Library;
 import com.brighton.cls.domain.LibraryTree;
 import com.brighton.cls.repository.CollectorRepository;
+import com.brighton.cls.repository.DashboardRepository;
 import com.brighton.cls.repository.FolderRepository;
 import com.brighton.cls.repository.LibraryRepository;
 import com.brighton.cls.util.TreeService;
@@ -60,6 +60,9 @@ public class LibraryController {
     
     @Autowired
     private LibraryRepository libraryRepository;
+    
+    @Autowired
+    private DashboardRepository dashboardRepository;
     
     @Autowired
     private TreeService treeService;

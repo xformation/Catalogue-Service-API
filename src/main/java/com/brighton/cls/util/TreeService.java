@@ -4,7 +4,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -112,121 +114,122 @@ public class TreeService {
     
     
     public List<LibraryTree> getLibraryTree() {
-    	List<FolderTree> folderTree = getFoldersTree();
-    	List<LibraryTree> parentLibraryList = new ArrayList<>();
-    	for(FolderTree ft: folderTree) {
-    		
-    		LibraryTree folderNode = new LibraryTree();
-    		BeanUtils.copyProperties(ft, folderNode);
-    		folderNode.setIsFolder(true);
-    		folderNode.setHasChild(true);
-    		folderNode.setName(ft.getTitle());
-    		folderNode.setDescription(ft.getTitle()+" directory");
-    		
-    		Folder fl = new Folder();
-    		fl.setId(ft.getId());
-//    		BeanUtils.copyProperties(ft, fl);
-    		
-    		Library lb = new Library();
-    		lb.setFolder(fl);
-    		List<Library> libraryList = libraryRepository.findAll(Example.of(lb));
-    		
-    		LocalDateTime datetime = null;
-    		for(Library library: libraryList) {
-            	Collector col = library.getCollector();
-        		LibraryTree collectorNode = new LibraryTree();
-        		collectorNode.setId(col.getId());
-        		collectorNode.setParentId(folderNode.getId());
-        		collectorNode.setName(col.getName());
-        		collectorNode.setDescription(col.getDescription());
-        		collectorNode.setIsFolder(false);
-        		collectorNode.setHasChild(false);
+        logger.debug("Request to get library tree");
+        List<Library> libraryList = libraryRepository.findAll(Sort.by(Direction.DESC, "id"));
+        Map<Long, LibraryTree> orgMap = new HashMap<Long, LibraryTree>();  
+        Map<Long, LibraryTree> mp = new HashMap<>();
+        LocalDateTime datetime = null;
+        for(Library library: libraryList) {
+        	LibraryTree folderNode = null;
+        	if(!orgMap.containsKey(library.getFolder().getId())) {
+        		folderNode = new LibraryTree();
+        		folderNode.setId(library.getFolder().getId());
+        		folderNode.setParentId(library.getFolder().getParentId());
+        		folderNode.setIsFolder(true);
+        		folderNode.setHasChild(true);
+        		folderNode.setName(library.getFolder().getTitle());
+        		folderNode.setDescription(library.getFolder().getTitle()+" directory");
         		
-        		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
+        		datetime = LocalDateTime.ofInstant(library.getFolder().getUpdatedOn(), ZoneId.systemDefault());
         		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
-        		collectorNode.setCreatedBy(col.getUpdatedBy());
-        		collectorNode.setLastModified(formatedDate + " by "+ col.getUpdatedBy());
+        		folderNode.setCreatedBy(library.getFolder().getUpdatedBy());
+        		folderNode.setLastModified(formatedDate + " by "+ library.getFolder().getUpdatedBy());
         		
-        		Dashboard dashboard = new Dashboard();
-        		dashboard.setCollector(col);
-        		List<Dashboard> dsList = dashboardRepository.findAll(Example.of(dashboard));
-        		for(Dashboard d: dsList) {
-        			CatalogDetail cd = new CatalogDetail();
-        			cd.setId(d.getId());
-        			cd.setTitle(d.getName());
-        			cd.setDescription(d.getDescription());
-        			collectorNode.getDashboardList().add(cd);
-        		}
-        		folderNode.getItems().add(collectorNode);
-            }
+        		orgMap.put(library.getFolder().getId(), folderNode);
+        	}else {
+        		folderNode = orgMap.get(library.getFolder().getId());
+        	}
+        	Collector col = library.getCollector();
+    		LibraryTree collectorNode = new LibraryTree();
+    		collectorNode.setId(col.getId());
+    		collectorNode.setParentId(folderNode.getId());
+    		collectorNode.setName(col.getName());
+    		collectorNode.setDescription(col.getDescription());
+    		collectorNode.setIsFolder(false);
+    		collectorNode.setHasChild(false);
     		
-    		parentLibraryList.add(folderNode);
-    		getSubLibraryTree(ft, folderNode);
-    	}
-    	
-    	LibraryTree finalTree = new LibraryTree();
-    	finalTree.setName("Library");
-    	finalTree.setIsFolder(true);
-    	for(LibraryTree lt: parentLibraryList) {
-    		logger.debug("Adding library object to root list. Library : ",lt);
-    		finalTree.getItems().add(lt);
-    	}
-    	List<LibraryTree> finalList = new ArrayList<>();
-    	finalList.add(finalTree);
-    	return finalList;
-    	
+    		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
+    		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+    		collectorNode.setCreatedBy(col.getUpdatedBy());
+    		collectorNode.setLastModified(formatedDate + " by "+ col.getUpdatedBy());
+    		
+    		Dashboard dashboard = new Dashboard();
+    		dashboard.setCollector(col);
+    		List<Dashboard> dsList = dashboardRepository.findAll(Example.of(dashboard));
+    		for(Dashboard d: dsList) {
+    			CatalogDetail cd = new CatalogDetail();
+    			cd.setId(d.getId());
+    			cd.setTitle(d.getName());
+    			cd.setDescription(d.getDescription());
+    			collectorNode.getDashboardList().add(cd);
+    		}
+    		folderNode.getItems().add(collectorNode);
+        }
+        
+        List<LibraryTree> parentList = new ArrayList<>();
+        
+        for(LibraryTree lt : orgMap.values()) {
+        	getSubLibraryTree(lt, parentList, mp);
+        }
+        
+        List<LibraryTree> reList = new ArrayList<>();
+        for(LibraryTree lt: mp.values()) {
+        	logger.debug("Parent id : "+lt.getParentId()+", Id: "+lt.getId()+", name : "+lt.getName());
+        	if(!Objects.isNull(lt.getParentId())) {
+        		LibraryTree parentObj = mp.get(lt.getParentId());
+        		boolean isFound = false;
+        		for(LibraryTree childObj: parentObj.getItems()) {
+        			if(lt.getId().compareTo(childObj.getId()) == 0 ) {
+        				isFound = true;
+        			}
+        		}
+        		if(!isFound) {
+        			parentObj.getItems().add(lt);
+        		}
+        	}else {
+        		reList.add(lt);
+        	}
+        }
+        
+        LibraryTree topNode = new LibraryTree();
+        topNode.setName("Library");
+        topNode.setIsFolder(true);
+
+        for(LibraryTree lt: reList) {
+        	topNode.getItems().add(lt);
+        }
+        
+        List<LibraryTree> finalList = new ArrayList<>();
+        finalList.add(topNode);
+        return finalList;
     }
     
-    private void getSubLibraryTree(FolderTree ftObj, LibraryTree parentFolderNode) {
-    	List<FolderTree> ftList = ftObj.getSubData();
+    private void getSubLibraryTree(LibraryTree childNode, List<LibraryTree> parentList, Map<Long, LibraryTree> mp) {
+    	mp.put(childNode.getId(), childNode);
     	LocalDateTime datetime = null;
-    	for(FolderTree ft: ftList) {
-    		LibraryTree folderNode = new LibraryTree();
-    		BeanUtils.copyProperties(ft, folderNode);
-    		folderNode.setIsFolder(true);
-    		folderNode.setHasChild(true);
-    		folderNode.setName(ft.getTitle());
-    		folderNode.setDescription(ft.getTitle()+" directory");
+    	if(!Objects.isNull(childNode.getParentId())) {
+    		Folder parentFolder = folderRepository.findById(childNode.getParentId()).get();
+    		LibraryTree parentNode = new LibraryTree();
     		
-    		Folder fl = new Folder();
-    		fl.setId(ft.getId());
-//    		BeanUtils.copyProperties(ft, fl);
+    		parentNode.setId(parentFolder.getId());
+    		parentNode.setParentId(parentFolder.getParentId());
+    		parentNode.setIsFolder(true);
+    		parentNode.setHasChild(true);
+    		parentNode.setName(parentFolder.getTitle());
+    		parentNode.setDescription(parentFolder.getTitle()+" directory");
     		
-    		Library lb = new Library();
-    		lb.setFolder(fl);
-    		List<Library> libraryList = libraryRepository.findAll(Example.of(lb));
+    		datetime = LocalDateTime.ofInstant(parentFolder.getUpdatedOn(), ZoneId.systemDefault());
+    		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
+    		parentNode.setCreatedBy(parentFolder.getUpdatedBy());
+    		parentNode.setLastModified(formatedDate + " by "+ parentFolder.getUpdatedBy());
     		
-    		for(Library library: libraryList) {
-            	Collector col = library.getCollector();
-        		LibraryTree collectorNode = new LibraryTree();
-        		collectorNode.setId(col.getId());
-        		collectorNode.setParentId(folderNode.getId());
-        		collectorNode.setName(col.getName());
-        		collectorNode.setDescription(col.getDescription());
-        		collectorNode.setIsFolder(false);
-        		collectorNode.setHasChild(false);
-        		
-        		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
-        		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
-        		collectorNode.setCreatedBy(col.getUpdatedBy());
-        		collectorNode.setLastModified(formatedDate + " by "+ col.getUpdatedBy());
-        		
-        		
-        		Dashboard dashboard = new Dashboard();
-        		dashboard.setCollector(col);
-        		List<Dashboard> dsList = dashboardRepository.findAll(Example.of(dashboard));
-        		for(Dashboard d: dsList) {
-        			CatalogDetail cd = new CatalogDetail();
-        			cd.setId(d.getId());
-        			cd.setTitle(d.getName());
-        			cd.setDescription(d.getDescription());
-        			collectorNode.getDashboardList().add(cd);
-        		}
-        		folderNode.getItems().add(collectorNode);
-            }
+    		logger.debug("Adding child to the parent");
+    		parentNode.getItems().add(childNode);
     		
-    		parentFolderNode.getItems().add(folderNode);
-    		getSubLibraryTree(ft, folderNode);
+    		getSubLibraryTree(parentNode, parentList, mp);
+    		
+    	}else {
+    		parentList.add(childNode);
     	}
     }
 }
