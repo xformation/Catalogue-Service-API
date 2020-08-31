@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * A Dashboard.
@@ -34,6 +35,18 @@ public class Dashboard implements Serializable {
     @Size(max = 5000)
     @Column(name = "description", length = 5000)
     private String description;
+
+    @Column(name = "created_by")
+    private String createdBy;
+
+    @Column(name = "created_on")
+    private Instant createdOn;
+
+    @Column(name = "updated_by")
+    private String updatedBy;
+
+    @Column(name = "updated_on")
+    private Instant updatedOn;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "dashboards", allowSetters = true)
@@ -100,6 +113,58 @@ public class Dashboard implements Serializable {
         this.description = description;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public Dashboard createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public Dashboard createdOn(Instant createdOn) {
+        this.createdOn = createdOn;
+        return this;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public Dashboard updatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+        return this;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Instant getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public Dashboard updatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+        return this;
+    }
+
+    public void setUpdatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     public Collector getCollector() {
         return collector;
     }
@@ -139,6 +204,10 @@ public class Dashboard implements Serializable {
             ", dashboard='" + getDashboard() + "'" +
             ", dashboardContentType='" + getDashboardContentType() + "'" +
             ", description='" + getDescription() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdOn='" + getCreatedOn() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", updatedOn='" + getUpdatedOn() + "'" +
             "}";
     }
 }

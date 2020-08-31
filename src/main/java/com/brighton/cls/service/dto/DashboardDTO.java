@@ -1,5 +1,6 @@
 package com.brighton.cls.service.dto;
 
+import java.time.Instant;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import javax.persistence.Lob;
@@ -19,6 +20,14 @@ public class DashboardDTO implements Serializable {
     private String dashboardContentType;
     @Size(max = 5000)
     private String description;
+
+    private String createdBy;
+
+    private Instant createdOn;
+
+    private String updatedBy;
+
+    private Instant updatedOn;
 
 
     private Long collectorId;
@@ -63,6 +72,38 @@ public class DashboardDTO implements Serializable {
         this.description = description;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Instant createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Instant getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Instant updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     public Long getCollectorId() {
         return collectorId;
     }
@@ -96,6 +137,10 @@ public class DashboardDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", dashboard='" + getDashboard() + "'" +
             ", description='" + getDescription() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdOn='" + getCreatedOn() + "'" +
+            ", updatedBy='" + getUpdatedBy() + "'" +
+            ", updatedOn='" + getUpdatedOn() + "'" +
             ", collectorId=" + getCollectorId() +
             "}";
     }

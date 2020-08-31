@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +45,18 @@ public class DashboardResourceIT {
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_UPDATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_UPDATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_UPDATED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_UPDATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private DashboardRepository dashboardRepository;
@@ -72,7 +86,11 @@ public class DashboardResourceIT {
             .name(DEFAULT_NAME)
             .dashboard(DEFAULT_DASHBOARD)
             .dashboardContentType(DEFAULT_DASHBOARD_CONTENT_TYPE)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdOn(DEFAULT_CREATED_ON)
+            .updatedBy(DEFAULT_UPDATED_BY)
+            .updatedOn(DEFAULT_UPDATED_ON);
         return dashboard;
     }
     /**
@@ -86,7 +104,11 @@ public class DashboardResourceIT {
             .name(UPDATED_NAME)
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         return dashboard;
     }
 
@@ -114,6 +136,10 @@ public class DashboardResourceIT {
         assertThat(testDashboard.getDashboard()).isEqualTo(DEFAULT_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(DEFAULT_DASHBOARD_CONTENT_TYPE);
         assertThat(testDashboard.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testDashboard.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testDashboard.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
+        assertThat(testDashboard.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
+        assertThat(testDashboard.getUpdatedOn()).isEqualTo(DEFAULT_UPDATED_ON);
     }
 
     @Test
@@ -151,7 +177,11 @@ public class DashboardResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].dashboardContentType").value(hasItem(DEFAULT_DASHBOARD_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].dashboard").value(hasItem(Base64Utils.encodeToString(DEFAULT_DASHBOARD))))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
+            .andExpect(jsonPath("$.[*].updatedOn").value(hasItem(DEFAULT_UPDATED_ON.toString())));
     }
     
     @Test
@@ -168,7 +198,11 @@ public class DashboardResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.dashboardContentType").value(DEFAULT_DASHBOARD_CONTENT_TYPE))
             .andExpect(jsonPath("$.dashboard").value(Base64Utils.encodeToString(DEFAULT_DASHBOARD)))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
+            .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
+            .andExpect(jsonPath("$.updatedOn").value(DEFAULT_UPDATED_ON.toString()));
     }
     @Test
     @Transactional
@@ -194,7 +228,11 @@ public class DashboardResourceIT {
             .name(UPDATED_NAME)
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdOn(UPDATED_CREATED_ON)
+            .updatedBy(UPDATED_UPDATED_BY)
+            .updatedOn(UPDATED_UPDATED_ON);
         DashboardDTO dashboardDTO = dashboardMapper.toDto(updatedDashboard);
 
         restDashboardMockMvc.perform(put("/api/dashboards")
@@ -210,6 +248,10 @@ public class DashboardResourceIT {
         assertThat(testDashboard.getDashboard()).isEqualTo(UPDATED_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(UPDATED_DASHBOARD_CONTENT_TYPE);
         assertThat(testDashboard.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testDashboard.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testDashboard.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testDashboard.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);
+        assertThat(testDashboard.getUpdatedOn()).isEqualTo(UPDATED_UPDATED_ON);
     }
 
     @Test

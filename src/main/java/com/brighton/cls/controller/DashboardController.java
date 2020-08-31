@@ -2,6 +2,7 @@ package com.brighton.cls.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.brighton.cls.config.Constants;
 import com.brighton.cls.domain.CatalogDetail;
 import com.brighton.cls.domain.Collector;
 import com.brighton.cls.domain.Dashboard;
@@ -69,7 +71,8 @@ public class DashboardController {
     										@RequestParam Long collectorId,
     										@RequestParam String dashboardName,
     										@RequestParam String dashboardJson, 
-    										@RequestParam(required = false) String dashboardDoc) throws URISyntaxException {
+    										@RequestParam(required = false) String dashboardDoc,
+    										@RequestParam (name = "userName", required = false) String userName) throws URISyntaxException {
         logger.info(String.format("Request to create add a dashboard to existing Collector. Collector id : %d", collectorId));
         
         Optional<Collector> oc = collectorRepository.findById(collectorId);
@@ -83,7 +86,17 @@ public class DashboardController {
         dashboard.setName(dashboardName);
         dashboard.setDashboard(dashboardJson.getBytes());
         dashboard.setDescription(dashboardDoc);
-        
+        if(!StringUtils.isBlank(userName)) {
+        	dashboard.setCreatedBy(userName);
+        	dashboard.setUpdatedBy(userName);
+    	}else {
+    		dashboard.setCreatedBy(Constants.SYSTEM_ACCOUNT);
+    		dashboard.setUpdatedBy(Constants.SYSTEM_ACCOUNT);
+    	}
+    	Instant now = Instant.now();
+    	dashboard.setCreatedOn(now);
+    	dashboard.setUpdatedOn(now);
+    	
         
         dashboard = dashboardRepository.save(dashboard);
         logger.info("Dashboard added to collector successfull");

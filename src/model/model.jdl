@@ -15,6 +15,10 @@ entity Dashboard {
 	name String
 	dashboard Blob
 	description String maxlength(5000)
+	createdBy String
+	createdOn Instant
+	updatedBy String
+	updatedOn Instant
 }
 
 entity Library{

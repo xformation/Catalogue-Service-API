@@ -27,11 +27,25 @@
             <column name="description" type="varchar(5000)">
                 <constraints nullable="true" />
             </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_on" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="updated_on" type="datetime">
+                <constraints nullable="true" />
+            </column>
             <column name="collector_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="dashboard" columnName="created_on" columnDataType="datetime"/>
+        <dropDefaultValue tableName="dashboard" columnName="updated_on" columnDataType="datetime"/>
     </changeSet>
 
 </databaseChangeLog>
