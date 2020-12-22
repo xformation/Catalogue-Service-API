@@ -161,7 +161,7 @@ public class TreeService {
     			cd.setId(d.getId());
     			cd.setTitle(d.getName());
     			cd.setDescription(d.getDescription());
-    			
+    			cd.setDashboardJson(new String(d.getDashboard()));
     			datetime = LocalDateTime.ofInstant(d.getUpdatedOn(), ZoneId.systemDefault());
         		formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
         		cd.setCreatedBy(d.getUpdatedBy());
