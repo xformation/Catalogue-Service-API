@@ -40,6 +40,18 @@ entity Folder {
 	
 }
 
+entity ManageView {
+	name String
+	viewData Blob
+	description String maxlength(5000)
+	type String
+	status String
+	createdBy String
+	createdOn Instant
+	updatedBy String
+	updatedOn Instant
+}
+
 relationship ManyToOne {
 	Dashboard{collector} to Collector,
 	Library{collector} to Collector,
