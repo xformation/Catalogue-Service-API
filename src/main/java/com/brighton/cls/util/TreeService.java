@@ -127,6 +127,7 @@ public class TreeService {
         		folderNode.setParentId(library.getFolder().getParentId());
         		folderNode.setIsFolder(true);
         		folderNode.setHasChild(true);
+        		folderNode.setType("folder");
         		folderNode.setName(library.getFolder().getTitle());
         		folderNode.setDescription(library.getFolder().getTitle()+" directory");
         		
@@ -147,7 +148,7 @@ public class TreeService {
     		collectorNode.setDescription(col.getDescription());
     		collectorNode.setIsFolder(false);
     		collectorNode.setHasChild(false);
-    		
+    		collectorNode.setType("catalogue");
     		datetime = LocalDateTime.ofInstant(col.getUpdatedOn(), ZoneId.systemDefault());
     		String formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
     		collectorNode.setCreatedBy(col.getUpdatedBy());
@@ -166,7 +167,7 @@ public class TreeService {
         		formatedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(datetime);
         		cd.setCreatedBy(d.getUpdatedBy());
         		cd.setLastModified(formatedDate + " by "+ d.getUpdatedBy());
-        		
+        		cd.setType("dashboard");
     			collectorNode.getDashboardList().add(cd);
     		}
     		folderNode.getItems().add(collectorNode);

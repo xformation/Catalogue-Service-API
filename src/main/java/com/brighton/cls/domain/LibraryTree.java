@@ -1,6 +1,5 @@
 package com.brighton.cls.domain;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,24 +10,35 @@ import java.util.List;
  */
 public class LibraryTree implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private Long id;
-    private String name;
-    private String description;
-    private Long parentId;
-    private Boolean isOpened = Boolean.FALSE;
-    private Boolean isChecked = Boolean.FALSE;
-    private Boolean isFolder= Boolean.TRUE;
-    private List<LibraryTree> items = new ArrayList<>();
-    private Boolean hasChild = Boolean.FALSE;
-    private String createdBy;
-    private Date createdOn;
-    private String updatedOn;
-    private Date updatedBy;
-    private String lastModified;
-    private List<CatalogDetail> dashboardList = new ArrayList();
-    
+	private Long id;
+	private String name;
+	private String description;
+	private Long parentId;
+	private Boolean isOpened = Boolean.FALSE;
+	private Boolean isChecked = Boolean.FALSE;
+	private Boolean isFolder = Boolean.TRUE;
+	private List<LibraryTree> items = new ArrayList<>();
+	private Boolean hasChild = Boolean.FALSE;
+	private String type;
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	private String createdBy;
+	private Date createdOn;
+	private String updatedOn;
+	private Date updatedBy;
+	private String lastModified;
+
+	private List<CatalogDetail> dashboardList = new ArrayList();
+
 	public Boolean getHasChild() {
 		return hasChild;
 	}
@@ -50,80 +60,80 @@ public class LibraryTree implements Serializable {
 	}
 
 	public Long getId() {
-        return id;
-    }
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getParentId() {
-        return parentId;
-    }
+	public Long getParentId() {
+		return parentId;
+	}
 
-    public LibraryTree parentId(Long parentId) {
-        this.parentId = parentId;
-        return this;
-    }
+	public LibraryTree parentId(Long parentId) {
+		this.parentId = parentId;
+		return this;
+	}
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
 
-    public Boolean isIsOpened() {
-        return isOpened;
-    }
+	public Boolean isIsOpened() {
+		return isOpened;
+	}
 
-    public LibraryTree isOpened(Boolean isOpened) {
-        this.isOpened = isOpened;
-        return this;
-    }
+	public LibraryTree isOpened(Boolean isOpened) {
+		this.isOpened = isOpened;
+		return this;
+	}
 
-    public void setIsOpened(Boolean isOpened) {
-        this.isOpened = isOpened;
-    }
+	public void setIsOpened(Boolean isOpened) {
+		this.isOpened = isOpened;
+	}
 
-    public Boolean isIsChecked() {
-        return isChecked;
-    }
+	public Boolean isIsChecked() {
+		return isChecked;
+	}
 
-    public LibraryTree isChecked(Boolean isChecked) {
-        this.isChecked = isChecked;
-        return this;
-    }
+	public LibraryTree isChecked(Boolean isChecked) {
+		this.isChecked = isChecked;
+		return this;
+	}
 
-    public void setIsChecked(Boolean isChecked) {
-        this.isChecked = isChecked;
-    }
+	public void setIsChecked(Boolean isChecked) {
+		this.isChecked = isChecked;
+	}
 
-    public Boolean isIsFolder() {
-        return isFolder;
-    }
+	public Boolean isIsFolder() {
+		return isFolder;
+	}
 
-    public LibraryTree isFolder(Boolean isFolder) {
-        this.isFolder = isFolder;
-        return this;
-    }
+	public LibraryTree isFolder(Boolean isFolder) {
+		this.isFolder = isFolder;
+		return this;
+	}
 
-    public void setIsFolder(Boolean isFolder) {
-        this.isFolder = isFolder;
-    }
+	public void setIsFolder(Boolean isFolder) {
+		this.isFolder = isFolder;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof LibraryTree)) {
-            return false;
-        }
-        return id != null && id.equals(((LibraryTree) o).id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof LibraryTree)) {
+			return false;
+		}
+		return id != null && id.equals(((LibraryTree) o).id);
+	}
 
-    @Override
-    public int hashCode() {
-        return 31;
-    }
+	@Override
+	public int hashCode() {
+		return 31;
+	}
 
 	public String getName() {
 		return name;
@@ -196,7 +206,14 @@ public class LibraryTree implements Serializable {
 	public void setDashboardList(List<CatalogDetail> dashboardList) {
 		this.dashboardList = dashboardList;
 	}
-    
-	
-    
+
+	@Override
+	public String toString() {
+		return "LibraryTree [id=" + id + ", name=" + name + ", description=" + description + ", parentId=" + parentId
+				+ ", isOpened=" + isOpened + ", isChecked=" + isChecked + ", isFolder=" + isFolder + ", items=" + items
+				+ ", hasChild=" + hasChild + ", type=" + type + ", createdBy=" + createdBy + ", createdOn=" + createdOn
+				+ ", updatedOn=" + updatedOn + ", updatedBy=" + updatedBy + ", lastModified=" + lastModified
+				+ ", dashboardList=" + dashboardList + "]";
+	}
+
 }
