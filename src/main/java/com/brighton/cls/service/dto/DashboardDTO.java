@@ -21,6 +21,10 @@ public class DashboardDTO implements Serializable {
     @Size(max = 5000)
     private String description;
 
+    private String isMonitored;
+
+    private String type;
+
     private String createdBy;
 
     private Instant createdOn;
@@ -70,6 +74,22 @@ public class DashboardDTO implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIsMonitored() {
+        return isMonitored;
+    }
+
+    public void setIsMonitored(String isMonitored) {
+        this.isMonitored = isMonitored;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreatedBy() {
@@ -137,6 +157,8 @@ public class DashboardDTO implements Serializable {
             ", name='" + getName() + "'" +
             ", dashboard='" + getDashboard() + "'" +
             ", description='" + getDescription() + "'" +
+            ", isMonitored='" + getIsMonitored() + "'" +
+            ", type='" + getType() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +

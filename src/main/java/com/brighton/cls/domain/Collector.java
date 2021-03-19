@@ -27,6 +27,9 @@ public class Collector implements Serializable {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "sub_type")
+    private String subType;
+
     @Column(name = "datasource")
     private String datasource;
 
@@ -79,6 +82,19 @@ public class Collector implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public Collector subType(String subType) {
+        this.subType = subType;
+        return this;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     public String getDatasource() {
@@ -183,6 +199,7 @@ public class Collector implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
+            ", subType='" + getSubType() + "'" +
             ", datasource='" + getDatasource() + "'" +
             ", description='" + getDescription() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

@@ -34,12 +34,6 @@ public class LibraryServiceImpl implements LibraryService {
         this.libraryMapper = libraryMapper;
     }
 
-    /**
-     * Save a library.
-     *
-     * @param libraryDTO the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     public LibraryDTO save(LibraryDTO libraryDTO) {
         log.debug("Request to save Library : {}", libraryDTO);
@@ -48,11 +42,6 @@ public class LibraryServiceImpl implements LibraryService {
         return libraryMapper.toDto(library);
     }
 
-    /**
-     * Get all the libraries.
-     *
-     * @return the list of entities.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<LibraryDTO> findAll() {
@@ -63,12 +52,6 @@ public class LibraryServiceImpl implements LibraryService {
     }
 
 
-    /**
-     * Get one library by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<LibraryDTO> findOne(Long id) {
@@ -77,11 +60,6 @@ public class LibraryServiceImpl implements LibraryService {
             .map(libraryMapper::toDto);
     }
 
-    /**
-     * Delete the library by id.
-     *
-     * @param id the id of the entity.
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Library : {}", id);

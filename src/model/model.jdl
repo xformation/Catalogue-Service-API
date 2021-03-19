@@ -2,6 +2,7 @@
 entity Collector {
     name String 
     type String
+	subType String
     datasource String
     description String maxlength(5000)
     createdBy String
@@ -15,6 +16,8 @@ entity Dashboard {
 	name String
 	dashboard Blob
 	description String maxlength(5000)
+	isMonitored String 
+	type String
 	createdBy String
 	createdOn Instant
 	updatedBy String

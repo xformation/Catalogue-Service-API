@@ -34,12 +34,6 @@ public class FolderServiceImpl implements FolderService {
         this.folderMapper = folderMapper;
     }
 
-    /**
-     * Save a folder.
-     *
-     * @param folderDTO the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     public FolderDTO save(FolderDTO folderDTO) {
         log.debug("Request to save Folder : {}", folderDTO);
@@ -48,11 +42,6 @@ public class FolderServiceImpl implements FolderService {
         return folderMapper.toDto(folder);
     }
 
-    /**
-     * Get all the folders.
-     *
-     * @return the list of entities.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<FolderDTO> findAll() {
@@ -63,12 +52,6 @@ public class FolderServiceImpl implements FolderService {
     }
 
 
-    /**
-     * Get one folder by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<FolderDTO> findOne(Long id) {
@@ -77,11 +60,6 @@ public class FolderServiceImpl implements FolderService {
             .map(folderMapper::toDto);
     }
 
-    /**
-     * Delete the folder by id.
-     *
-     * @param id the id of the entity.
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Folder : {}", id);

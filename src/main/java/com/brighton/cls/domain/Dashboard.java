@@ -36,6 +36,12 @@ public class Dashboard implements Serializable {
     @Column(name = "description", length = 5000)
     private String description;
 
+    @Column(name = "is_monitored")
+    private String isMonitored;
+
+    @Column(name = "type")
+    private String type;
+
     @Column(name = "created_by")
     private String createdBy;
 
@@ -111,6 +117,32 @@ public class Dashboard implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIsMonitored() {
+        return isMonitored;
+    }
+
+    public Dashboard isMonitored(String isMonitored) {
+        this.isMonitored = isMonitored;
+        return this;
+    }
+
+    public void setIsMonitored(String isMonitored) {
+        this.isMonitored = isMonitored;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Dashboard type(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getCreatedBy() {
@@ -204,6 +236,8 @@ public class Dashboard implements Serializable {
             ", dashboard='" + getDashboard() + "'" +
             ", dashboardContentType='" + getDashboardContentType() + "'" +
             ", description='" + getDescription() + "'" +
+            ", isMonitored='" + getIsMonitored() + "'" +
+            ", type='" + getType() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", updatedBy='" + getUpdatedBy() + "'" +

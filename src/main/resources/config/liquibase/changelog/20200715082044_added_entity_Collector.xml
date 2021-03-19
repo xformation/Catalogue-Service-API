@@ -21,6 +21,9 @@
             <column name="type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+             <column name="sub_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="datasource" type="varchar(255)">
                 <constraints nullable="true" />
             </column>

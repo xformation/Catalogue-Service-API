@@ -75,11 +75,13 @@ public class CollectorController {
 	@PostMapping("/addCollector")
 	public ResponseEntity<List<Catalog>> addCollector(@RequestParam String name, @RequestParam String type,
 			@RequestParam(required = false) String description,
+			@RequestParam(required = false) String subType,
 			@RequestParam(name = "userName", required = false) String userName) throws URISyntaxException {
 		logger.info(String.format("Request to create a Collector. Collector name : %s, type : %s", name, type));
 		Collector collector = new Collector();
 		collector.setName(name);
 		collector.setType(type);
+		collector.setSubType(subType);
 		collector.setDescription(description);
 
 		if (!StringUtils.isBlank(userName)) {

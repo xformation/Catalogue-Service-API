@@ -15,6 +15,8 @@ public class CollectorDTO implements Serializable {
 
     private String type;
 
+    private String subType;
+
     private String datasource;
 
     @Size(max = 5000)
@@ -51,6 +53,14 @@ public class CollectorDTO implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSubType() {
+        return subType;
+    }
+
+    public void setSubType(String subType) {
+        this.subType = subType;
     }
 
     public String getDatasource() {
@@ -125,6 +135,7 @@ public class CollectorDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
+            ", subType='" + getSubType() + "'" +
             ", datasource='" + getDatasource() + "'" +
             ", description='" + getDescription() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

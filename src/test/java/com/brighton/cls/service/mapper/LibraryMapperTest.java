@@ -8,15 +8,15 @@ public class LibraryMapperTest {
 
     private LibraryMapper libraryMapper;
 
-//    @BeforeEach
-//    public void setUp() {
-//        libraryMapper = new LibraryMapperImpl();
-//    }
-//
-//    @Test
-//    public void testEntityFromId() {
-//        Long id = 1L;
-//        assertThat(libraryMapper.fromId(id).getId()).isEqualTo(id);
-//        assertThat(libraryMapper.fromId(null)).isNull();
-//    }
+    @BeforeEach
+    public void setUp() {
+        libraryMapper = new LibraryMapperImpl();
+    }
+
+    @Test
+    public void testEntityFromId() {
+        Long id = 1L;
+        assertThat(libraryMapper.fromId(id).getId()).isEqualTo(id);
+        assertThat(libraryMapper.fromId(null)).isNull();
+    }
 }

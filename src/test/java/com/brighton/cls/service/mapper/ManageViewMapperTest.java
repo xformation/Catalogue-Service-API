@@ -8,10 +8,10 @@ public class ManageViewMapperTest {
 
     private ManageViewMapper manageViewMapper;
 
-//    @BeforeEach
-//    public void setUp() {
-//        manageViewMapper = new ManageViewMapperImpl();
-//    }
+    @BeforeEach
+    public void setUp() {
+        manageViewMapper = new ManageViewMapperImpl();
+    }
 
     @Test
     public void testEntityFromId() {

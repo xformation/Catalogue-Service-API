@@ -34,12 +34,6 @@ public class DashboardServiceImpl implements DashboardService {
         this.dashboardMapper = dashboardMapper;
     }
 
-    /**
-     * Save a dashboard.
-     *
-     * @param dashboardDTO the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     public DashboardDTO save(DashboardDTO dashboardDTO) {
         log.debug("Request to save Dashboard : {}", dashboardDTO);
@@ -48,11 +42,6 @@ public class DashboardServiceImpl implements DashboardService {
         return dashboardMapper.toDto(dashboard);
     }
 
-    /**
-     * Get all the dashboards.
-     *
-     * @return the list of entities.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<DashboardDTO> findAll() {
@@ -63,12 +52,6 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
 
-    /**
-     * Get one dashboard by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<DashboardDTO> findOne(Long id) {
@@ -77,11 +60,6 @@ public class DashboardServiceImpl implements DashboardService {
             .map(dashboardMapper::toDto);
     }
 
-    /**
-     * Delete the dashboard by id.
-     *
-     * @param id the id of the entity.
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Dashboard : {}", id);

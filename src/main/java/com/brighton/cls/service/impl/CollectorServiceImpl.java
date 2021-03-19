@@ -34,12 +34,6 @@ public class CollectorServiceImpl implements CollectorService {
         this.collectorMapper = collectorMapper;
     }
 
-    /**
-     * Save a collector.
-     *
-     * @param collectorDTO the entity to save.
-     * @return the persisted entity.
-     */
     @Override
     public CollectorDTO save(CollectorDTO collectorDTO) {
         log.debug("Request to save Collector : {}", collectorDTO);
@@ -48,11 +42,6 @@ public class CollectorServiceImpl implements CollectorService {
         return collectorMapper.toDto(collector);
     }
 
-    /**
-     * Get all the collectors.
-     *
-     * @return the list of entities.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<CollectorDTO> findAll() {
@@ -63,12 +52,6 @@ public class CollectorServiceImpl implements CollectorService {
     }
 
 
-    /**
-     * Get one collector by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
     @Override
     @Transactional(readOnly = true)
     public Optional<CollectorDTO> findOne(Long id) {
@@ -77,11 +60,6 @@ public class CollectorServiceImpl implements CollectorService {
             .map(collectorMapper::toDto);
     }
 
-    /**
-     * Delete the collector by id.
-     *
-     * @param id the id of the entity.
-     */
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Collector : {}", id);

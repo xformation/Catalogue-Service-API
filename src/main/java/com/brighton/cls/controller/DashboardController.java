@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +72,7 @@ public class DashboardController {
     										@RequestParam Long collectorId,
     										@RequestParam String dashboardName,
     										@RequestParam String dashboardJson, 
+    										@RequestParam String type, 
     										@RequestParam(required = false) String dashboardDoc,
     										@RequestParam (name = "userName", required = false) String userName) throws URISyntaxException {
         logger.info(String.format("Request to create add a dashboard to existing Collector. Collector id : %d", collectorId));
@@ -84,8 +86,10 @@ public class DashboardController {
         Dashboard dashboard = new Dashboard();
         dashboard.setCollector(oc.get());
         dashboard.setName(dashboardName);
+        dashboard.setType(type);
         dashboard.setDashboard(dashboardJson.getBytes());
         dashboard.setDescription(dashboardDoc);
+        dashboard.setIsMonitored("no");
         if(!StringUtils.isBlank(userName)) {
         	dashboard.setCreatedBy(userName);
         	dashboard.setUpdatedBy(userName);
@@ -104,7 +108,19 @@ public class DashboardController {
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, dashboard.getId().toString()))
             .body(dashboard);
     }
-
+    @PutMapping("/updateDashbordMonitorFlag")
+    public ResponseEntity<Dashboard> updateDashbordMoniterFlag(@RequestParam Long id,@RequestParam String monitorFlag) throws URISyntaxException {
+    	Dashboard dashboard = new Dashboard();
+    	dashboard.setId(id);
+    	dashboard.setIsMonitored(monitorFlag);
+    	Instant now = Instant.now();
+    	dashboard.setUpdatedOn(now);      
+        dashboard = dashboardRepository.save(dashboard);
+        logger.info("Dashboard added to collector successfull");
+        return ResponseEntity.created(new URI("/api/updateDashbordMonitorFlag/" + dashboard.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, dashboard.getId().toString()))
+            .body(dashboard);
+    }
     /**
      * {@code DELETE  /deleteDashboardFromCollector} : delete a dashboard.
      *

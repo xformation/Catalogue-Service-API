@@ -46,6 +46,12 @@ public class DashboardResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_IS_MONITORED = "AAAAAAAAAA";
+    private static final String UPDATED_IS_MONITORED = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_TYPE = "BBBBBBBBBB";
+
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
@@ -87,6 +93,8 @@ public class DashboardResourceIT {
             .dashboard(DEFAULT_DASHBOARD)
             .dashboardContentType(DEFAULT_DASHBOARD_CONTENT_TYPE)
             .description(DEFAULT_DESCRIPTION)
+            .isMonitored(DEFAULT_IS_MONITORED)
+            .type(DEFAULT_TYPE)
             .createdBy(DEFAULT_CREATED_BY)
             .createdOn(DEFAULT_CREATED_ON)
             .updatedBy(DEFAULT_UPDATED_BY)
@@ -105,6 +113,8 @@ public class DashboardResourceIT {
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
             .description(UPDATED_DESCRIPTION)
+            .isMonitored(UPDATED_IS_MONITORED)
+            .type(UPDATED_TYPE)
             .createdBy(UPDATED_CREATED_BY)
             .createdOn(UPDATED_CREATED_ON)
             .updatedBy(UPDATED_UPDATED_BY)
@@ -136,6 +146,8 @@ public class DashboardResourceIT {
         assertThat(testDashboard.getDashboard()).isEqualTo(DEFAULT_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(DEFAULT_DASHBOARD_CONTENT_TYPE);
         assertThat(testDashboard.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testDashboard.getIsMonitored()).isEqualTo(DEFAULT_IS_MONITORED);
+        assertThat(testDashboard.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testDashboard.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testDashboard.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testDashboard.getUpdatedBy()).isEqualTo(DEFAULT_UPDATED_BY);
@@ -178,6 +190,8 @@ public class DashboardResourceIT {
             .andExpect(jsonPath("$.[*].dashboardContentType").value(hasItem(DEFAULT_DASHBOARD_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].dashboard").value(hasItem(Base64Utils.encodeToString(DEFAULT_DASHBOARD))))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].isMonitored").value(hasItem(DEFAULT_IS_MONITORED)))
+            .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].updatedBy").value(hasItem(DEFAULT_UPDATED_BY)))
@@ -199,6 +213,8 @@ public class DashboardResourceIT {
             .andExpect(jsonPath("$.dashboardContentType").value(DEFAULT_DASHBOARD_CONTENT_TYPE))
             .andExpect(jsonPath("$.dashboard").value(Base64Utils.encodeToString(DEFAULT_DASHBOARD)))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.isMonitored").value(DEFAULT_IS_MONITORED))
+            .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.updatedBy").value(DEFAULT_UPDATED_BY))
@@ -229,6 +245,8 @@ public class DashboardResourceIT {
             .dashboard(UPDATED_DASHBOARD)
             .dashboardContentType(UPDATED_DASHBOARD_CONTENT_TYPE)
             .description(UPDATED_DESCRIPTION)
+            .isMonitored(UPDATED_IS_MONITORED)
+            .type(UPDATED_TYPE)
             .createdBy(UPDATED_CREATED_BY)
             .createdOn(UPDATED_CREATED_ON)
             .updatedBy(UPDATED_UPDATED_BY)
@@ -248,6 +266,8 @@ public class DashboardResourceIT {
         assertThat(testDashboard.getDashboard()).isEqualTo(UPDATED_DASHBOARD);
         assertThat(testDashboard.getDashboardContentType()).isEqualTo(UPDATED_DASHBOARD_CONTENT_TYPE);
         assertThat(testDashboard.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testDashboard.getIsMonitored()).isEqualTo(UPDATED_IS_MONITORED);
+        assertThat(testDashboard.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testDashboard.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testDashboard.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testDashboard.getUpdatedBy()).isEqualTo(UPDATED_UPDATED_BY);

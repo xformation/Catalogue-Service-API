@@ -40,6 +40,9 @@ public class CollectorResourceIT {
     private static final String DEFAULT_TYPE = "AAAAAAAAAA";
     private static final String UPDATED_TYPE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SUB_TYPE = "AAAAAAAAAA";
+    private static final String UPDATED_SUB_TYPE = "BBBBBBBBBB";
+
     private static final String DEFAULT_DATASOURCE = "AAAAAAAAAA";
     private static final String UPDATED_DATASOURCE = "BBBBBBBBBB";
 
@@ -85,6 +88,7 @@ public class CollectorResourceIT {
         Collector collector = new Collector()
             .name(DEFAULT_NAME)
             .type(DEFAULT_TYPE)
+            .subType(DEFAULT_SUB_TYPE)
             .datasource(DEFAULT_DATASOURCE)
             .description(DEFAULT_DESCRIPTION)
             .createdBy(DEFAULT_CREATED_BY)
@@ -103,6 +107,7 @@ public class CollectorResourceIT {
         Collector collector = new Collector()
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
+            .subType(UPDATED_SUB_TYPE)
             .datasource(UPDATED_DATASOURCE)
             .description(UPDATED_DESCRIPTION)
             .createdBy(UPDATED_CREATED_BY)
@@ -134,6 +139,7 @@ public class CollectorResourceIT {
         Collector testCollector = collectorList.get(collectorList.size() - 1);
         assertThat(testCollector.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCollector.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testCollector.getSubType()).isEqualTo(DEFAULT_SUB_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(DEFAULT_DATASOURCE);
         assertThat(testCollector.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCollector.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -176,6 +182,7 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(collector.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE)))
+            .andExpect(jsonPath("$.[*].subType").value(hasItem(DEFAULT_SUB_TYPE)))
             .andExpect(jsonPath("$.[*].datasource").value(hasItem(DEFAULT_DATASOURCE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
@@ -197,6 +204,7 @@ public class CollectorResourceIT {
             .andExpect(jsonPath("$.id").value(collector.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE))
+            .andExpect(jsonPath("$.subType").value(DEFAULT_SUB_TYPE))
             .andExpect(jsonPath("$.datasource").value(DEFAULT_DATASOURCE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
@@ -227,6 +235,7 @@ public class CollectorResourceIT {
         updatedCollector
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
+            .subType(UPDATED_SUB_TYPE)
             .datasource(UPDATED_DATASOURCE)
             .description(UPDATED_DESCRIPTION)
             .createdBy(UPDATED_CREATED_BY)
@@ -246,6 +255,7 @@ public class CollectorResourceIT {
         Collector testCollector = collectorList.get(collectorList.size() - 1);
         assertThat(testCollector.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCollector.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testCollector.getSubType()).isEqualTo(UPDATED_SUB_TYPE);
         assertThat(testCollector.getDatasource()).isEqualTo(UPDATED_DATASOURCE);
         assertThat(testCollector.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCollector.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
